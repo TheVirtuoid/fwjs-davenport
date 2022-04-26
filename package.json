@@ -1,0 +1,32 @@
+{
+  "name": "fwjs-davenport",
+  "version": "0.0.1",
+  "description": "Fun With JavaScript: The Davenport Card Game - by TheVirtuoid",
+  "main": "index.js",
+  "scripts": {
+    "test": "cypress run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheVirtuoid/fwjs-davenport.git"
+  },
+  "keywords": [
+    "javascript",
+    "card",
+    "deck"
+  ],
+  "author": "TheVirtuoid <thevirtuoid@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TheVirtuoid/fwjs-davenport/issues"
+  },
+  "homepage": "https://github.com/TheVirtuoid/fwjs-davenport#readme",
+  "devDependencies": {
+    "@cypress/webpack-preprocessor": "^5.11.1",
+    "cypress": "^9.6.0"
+  },
+  "dependencies": {
+    "@virtuoid/cards": "^1.2.1",
+    "@virtuoid/deck": "^1.1.0"
+  }
+}
