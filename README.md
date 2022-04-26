@@ -17,11 +17,13 @@ Fun With JavaScript: The Davenport Card Game - By TheVirtuoid
     2. Only one card can be exchanged per round.
 
 Playoff
-1. Each player draws three cards from the deck.
+1. Each player draws three cards from a newly shuffled deck.
 2. A round is played as described above.
 3. Low card player is eliminated.
 4. Each remaining player picks up a card and play resumes.
 5. In case of a tie, see #4 above.
+6. The Ace Rule does not apply during the playoff.
+7. Optional: Instead of elimination, a player can reach a predetermined number of wins, such as 3.
 
 Scoring and Options
 1. Each card is given a value between 1 and 13
