@@ -26,7 +26,7 @@
     "cypress": "^9.6.0"
   },
   "dependencies": {
-    "@virtuoid/cards": "^1.2.1",
-    "@virtuoid/deck": "^1.1.0"
+    "@virtuoid/deck": "^1.1.0",
+    "@virtuoid/standard-card": "^1.0.0"
   }
 }
