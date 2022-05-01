@@ -1,4 +1,8 @@
+import Player from './../../../src/Player/Player.js';
+
 describe('player creation', () => {
-	it('should create a player', () => {});
-	it('should assign a AI level to a player if not a human player', () => {});
+	it('should create a player', () => {
+		const player = new Player();
+		expect(player instanceof Player).to.be.true;
+	});
 });
