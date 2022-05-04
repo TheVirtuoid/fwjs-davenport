@@ -1,43 +1,37 @@
-// new Round({ roundNumber, players })
-
-import Round from "../../../src/Round/Round";
+import Round from "../../../src/Round/Round.js";
 import Player from "../../../src/Player/Player";
 
+const players = [ new Player(), new Player() ];
+const roundNumber = 1;
+
 describe('round constructor', () => {
-	it('should create a new round', () => {
-		const round = new Round({ roundNumber: 1, players: [ new Player() ]});
+	it('must return a round', () => {
+		const round = new Round({ roundNumber, players });
 		expect(round instanceof Round).to.be.true;
 	});
-	it('should throw exception if roundNumber is not present', () => {
+	it('should return a round number if specified', () => {
+		const round = new Round({ roundNumber, players });
+		expect(round.roundNumber).to.equal(1);
+	});
+	it('should throw an exception if roundNumber is not present', () => {
 		try {
-			const round = new Round({ players: [ new Player() ]});
+			const round = new Round({ players });
 			expect(true).to.be.false;
 		} catch (err) {
-			expect(err.name).to.equal('TypeError');
+			expect(err.name).to.equal('Error');
 		}
 	});
-	it('should throw exception if players are not present', () => {
-		try {
-			const round = new Round({ roundNumber: 1 });
-			expect(true).to.be.false;
-		} catch (err) {
-			expect(err.name).to.equal('TypeError');
-		}
+	it('should have a players parameter', () => {
+		const round = new Round({ roundNumber, players });
+		expect(round.players instanceof Array).to.be.true;
+		expect(round.players.length).to.equal(players.length);
 	});
-	it('should throw exception if players is not an array', () => {
+	it('should throw exception if players is not present', () => {
 		try {
-			const round = new Round({ players: 1 });
+			const round = new Round({ roundNumber });
 			expect(true).to.be.false;
 		} catch (err) {
-			expect(err.name).to.equal('TypeError');
-		}
-	});
-	it('should throw exception if players is not array of Players', () => {
-		try {
-			const round = new Round({ players: [1, 2, 3, 4] });
-			expect(true).to.be.false;
-		} catch (err) {
-			expect(err.name).to.equal('TypeError');
+			expect(err.name).to.equal('Error');
 		}
 	});
 });

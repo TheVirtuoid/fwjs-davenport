@@ -17,10 +17,6 @@ describe('initialize the game', () => {
 		const allCardsCorrect = game.deck.every((card) => card.value === valueMapping.get(card.rank));
 		expect(allCardsCorrect).to.be.true;
 	});
-	it('should create a callback to use for the Round class', () => {
-		const game = new Game({ players });
-		// TODO: not sure how to test for this one. Shows a dependency.
-	});
 	it('should put together a collection of players', () => {
 		const game = new Game({ players });
 		expect(game.players.length).to.equal(2);
@@ -34,7 +30,7 @@ describe('initialize the game', () => {
 			expect(err.name).to.equal('RangeError');
 		}
 	});
-	it('number of players should not be more than 7', () => {
+	it('number of players should not be more than 4', () => {
 		const players = [ new Player(), new Player(), new Player(), new Player(),
 			new Player(), new Player(), new Player(), new Player() ];
 		try {
@@ -48,7 +44,7 @@ describe('initialize the game', () => {
 		const game = new Game({ players });
 		expect([0, 1].include(game.dealer)).to.be.true;
 	});
-	it('should deal 5 cards to each player, beginning with player immediately above the index of the dealer, and rotate through the players to where the dealer is last', () => {
+	xit('should deal 5 cards to each player, beginning with player immediately above the index of the dealer, and rotate through the players to where the dealer is last', () => {
 		const players = [ new Player(), new Player(), new Player(), new Player() ];
 		const game = new Game({ players });
 		const copyOfDeck = copyDeck(game.deck);
