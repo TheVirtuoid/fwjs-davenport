@@ -21,7 +21,7 @@ describe('players', () => {
 	});
 	it('should throw exception if players is not an array of Player', () => {
 		try {
-			const round = new Round({ roundNumber, players: [1, 2,3 , 4] });
+			const round = new Round({ roundNumber, players: [1, 2, 3, 4] });
 			expect(true).to.be.false;
 		} catch(err) {
 			expect(err.name).to.equal('TypeError');
