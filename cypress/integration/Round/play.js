@@ -6,8 +6,6 @@ import {StandardCardRanks, StandardCardSuits} from "@virtuoid/standard-card";
 
 const roundNumber = 1;
 const dealer = 0;
-let players2 = [ new Player({ id: 'a' }), new Player({ id: 'b' }) ];
-let players4 = [ new Player({ id: 'a' }), new Player({ id: 'b' }), new Player({ id: 'c' }), new Player({ id: 'd' }) ];
 
 // after the cards are dealt, the cards in order will be:
 // 		2 players
@@ -24,18 +22,24 @@ let players4 = [ new Player({ id: 'a' }), new Player({ id: 'b' }), new Player({ 
 
 const dealtFiveCards = (round) => {
 	const playerCheck = [];
-	for(let i = 0; i < round.numPlayers; i++) {
+	const numPlayers = round.numPlayers;
+	for(let i = 0; i < numPlayers; i++) {
 		const cards = [];
 		for(let j = 0; j < 5; j++) {
 			cards.push(standardCardDeckCopy[i * numPlayers + j * 5]);
 		}
 		playerCheck.push(cards);
 	}
-	const roundPlayers = round.numPlayers === 2 ? players2 : players4;
 
-	const finalResult = roundPlayers.every((player, index) => {
-		const deck = round.getPlayer({ id: player.id }).deck;
-		return player.every((card) => deck.findCard(card) !== -1);
+	const player0 = round.getPlayer({ id: 'a' });
+	const player1 = round.getPlayer({ id: 'b' });
+	const player2 = round.getPlayer({ id: 'c' });
+	const player3 = round.getPlayer({ id: 'd' });
+
+	const roundPlayers = [player0, player1, player2, player3];
+
+	const finalResult = playerCheck.every((deckCheck, index) => {
+		return deckCheck.every((card) => roundPlayers[index].deck.findCard(card) !== -1);
 	});
 
 	return finalResult;
@@ -147,7 +151,7 @@ describe('play a round with 2 players', () => {
 	beforeEach( () => {
 		deck = new Deck({ cards: copyDeck(new Deck({ cards: standardCardDeck})) });
 		const players = [ new Player({ id: 'a' }), new Player({ id: 'b' })];
-		const round = new Round({ roundNumber, players2, deck, dealer });
+		const round = new Round({ roundNumber, players, deck, dealer });
 		round.deal();
 	});
 	it('should deal five cards to the players correctly', () => {
@@ -207,16 +211,72 @@ describe('play a round with 4 players', () => {
 	let round;
 	beforeEach( () => {
 		deck = new Deck({ cards: copyDeck(new Deck({ cards: standardCardDeck})) });
-		const round = new Round({ roundNumber, players4, deck, dealer });
+		const players = [ new Player({ id: 'a' }), new Player({ id: 'b' }), new Player({ id: 'c' }), new Player({ id: 'd' })];
+		const round = new Round({ roundNumber, players, deck, dealer });
 		round.deal();
 	});
 	it('should deal five cards to the players correctly', () => {
 		expect(dealtFiveCards(round)).to.be.true;
 	});
-	it('should wait for all the players to cardlock', () => {});
-	it('should time-out if a player is not ready', () => {});
-	it('should reveal the cards and determine a single winner', () => {});
-	it('should reveal the cards and determine multiple winners', () => {});
-	it('should instruct non-winning players to pickup cards, in order from winner', () => {});
-	it('should signal the game that there is a winner', () => {});
+	it('should wait for all the players to cardlock', () => {
+		expect(waitForPlayers(round)).to.be.true;
+	});
+	it('should time-out if a player is not ready', () => {
+		const playerMissing = waitForPlayersFail((round, players));
+		expect(playerMissing).to.equal(0);
+	});
+	it('should reveal the cards and determine a single winner', () => {
+		const winningPlayers = determineSingleWinner(round);
+		expect(winningPlayers.length).to.equal(1);
+		expect(winningPlayers[0]).to.equal(0);
+	});
+	it('should reveal the cards and determine multiple winners', () => {
+		const winningPlayers = determineMultipleWinner(round);
+		expect(winningPlayers.length).to.equal(2);
+		expect(winningPlayers.find((player) => player.id === 'a')).to.not.be.undefined;
+		expect(winningPlayers.find((player) => player.id === 'b')).to.not.be.undefined;
+	});
+	it('should instruct non-winning players to pickup cards, in order from winner (single)', () => {
+		pickUpCardsSingleWinner(round);
+		const player0 = round.getPlayer({ id: 'a' });
+		const player1 = round.getPlayer({ id: 'b' });
+		const player2 = round.getPlayer({ id: 'c' });
+		const player3 = round.getPlayer({ id: 'd' });
+		expect(player0.deck.cardCount).to.equal(4);
+		expect(player1.deck.cardCount).to.equal(5);
+		expect(player2.deck.cardCount).to.equal(5);
+		expect(player3.deck.cardCount).to.equal(5);
+		expect(player1.deck.findCard(
+				new Card({
+					suit: StandardCardSuits.DIAMOND,
+					rank: StandardCardRanks.EIGHT,
+					value: valueMapping.get(StandardCardRanks.EIGHT)
+				})
+		)).to.not.equal(-1);
+		expect(player1.deck.findCard(
+				new Card({
+					suit: StandardCardSuits.DIAMOND,
+					rank: StandardCardRanks.NINE,
+					value: valueMapping.get(StandardCardRanks.NINE)
+				})
+		)).to.not.equal(-1);
+		expect(player1.deck.findCard(
+				new Card({
+					suit: StandardCardSuits.DIAMOND,
+					rank: StandardCardRanks.TEN,
+					value: valueMapping.get(StandardCardRanks.TEN)
+				})
+		)).to.not.equal(-1);
+	});
+	it('should instruct non-winning players to pickup cards, in order from winner (multiple)', () => {
+		pickUpCardsMultipleWinner(round);
+		const player0 = round.getPlayer({ id: 'a' });
+		const player1 = round.getPlayer({ id: 'b' });
+		const player2 = round.getPlayer({ id: 'c' });
+		const player3 = round.getPlayer({ id: 'd' });
+		expect(player0.deck.cardCount).to.equal(4);
+		expect(player1.deck.cardCount).to.equal(4);
+		expect(player2.deck.cardCount).to.equal(5);
+		expect(player3.deck.cardCount).to.equal(5);
+	});
 });
