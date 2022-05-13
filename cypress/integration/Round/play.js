@@ -1,3 +1,35 @@
+/*
+		A sample rond of Play
+
+		1. Each player locks a card
+		2. Cards are revealed
+		3. Winners are determined
+				3a. Game ends if one or more winners have zero cards
+		4. Non-winners draw cards (ensuring that cards are always available)
+		5. Repeat until overall winner
+
+		JS needed for the above:
+
+		while (!winners) {
+			try {
+				await playRound(round);
+			} catch(err) {
+				// player not responding. Game ends
+				winners = [-1];
+			}
+		}
+
+		const playRound = async (round) => {
+			lockCards(round)
+				.then(revealCards)
+				.then(determineWinners)
+				.then(drawCards)
+				.catch(playerNotResponding)
+		}
+ */
+
+
+
 import Round from './../../../src/Round/Round';
 import Player from './../../../src/Player/Player';
 import {copyDeck, standardCardDeck, standardCardDeckCopy, valueMapping} from './../../fixtures/standardDeck';
@@ -20,29 +52,17 @@ const dealer = 0;
 //		Dealer is 0 index player (player0)
 //
 
-const dealtFiveCards = (round) => {
-	const playerCheck = [];
-	const numPlayers = round.numPlayers;
-	for(let i = 0; i < numPlayers; i++) {
-		const cards = [];
-		for(let j = 0; j < 5; j++) {
-			cards.push(standardCardDeckCopy[i * numPlayers + j * 5]);
-		}
-		playerCheck.push(cards);
-	}
-
+const dealCards = (deck, round) => {
 	const player0 = round.getPlayer({ id: 'a' });
 	const player1 = round.getPlayer({ id: 'b' });
 	const player2 = round.getPlayer({ id: 'c' });
 	const player3 = round.getPlayer({ id: 'd' });
-
-	const roundPlayers = [player0, player1, player2, player3];
-
-	const finalResult = playerCheck.every((deckCheck, index) => {
-		return deckCheck.every((card) => roundPlayers[index].deck.findCard(card) !== -1);
-	});
-
-	return finalResult;
+	for(let i = 0; i < 5; i++) {
+		deck.deal(player1.deck);
+		if (player2) deck.deal(player2.deck);
+		if (player3) deck.deal(player3.deck);
+		deck.deal(player0.deck);
+	}
 }
 
 const lockPlayers = (round) => {
@@ -144,18 +164,62 @@ const winGame = async (round) => {
 	return round.determineNextDealer();
 }
 
+const beforeEach = (playerIds) => {
+	const deck = new Deck({ cards: copyDeck(standardCardDeck)});
+	const players = playerIds.map((id) => new Player({ id }));
+	const roundNumber = 1;
+	const dealer = 0;
+	const round = new Round({ roundNumber, players, deck, dealer });
+	dealCards(deck, round);
+	return { deck, players, roundNumber, dealer, round };
+};
+
 
 describe('play a round with 2 players', () => {
-	let deck;
-	let round;
-	beforeEach( () => {
-		deck = new Deck({ cards: copyDeck(new Deck({ cards: standardCardDeck})) });
-		const players = [ new Player({ id: 'a' }), new Player({ id: 'b' })];
-		const round = new Round({ roundNumber, players, deck, dealer });
-		round.deal();
+	const { deck, players, roundNumber, dealer, round } = beforeEach(['a', 'b']);
+	it('should wait for a cardlock for all players', () => {
+		round.waitForCardLock(round)
+				.then((round) => {
+					expect(round.getPlayer({ id: 'a' }).cardLock instanceof Card).to.be.true;
+					expect(round.getPlayer({ id: 'b' }).cardLock instanceof Card).to.be.true;
+				})
+				.catch((err) => {
+					expect(true).to.be.false;
+				})
 	});
-	it('should deal five cards to the players correctly', () => {
-		expect(dealtFiveCards(round)).to.be.true;
+	it('should throw exception if a player fails to cardlock', () => {
+		round.getPlayer({ id: 'a' }).human = true;
+		round.waitForCardLock(round)
+				.then((round) => {
+					expect(true).to.be.false;
+					round.getPlayer({ id: 'a' }).human = false;
+				})
+				.catch((err) => {
+					expect(err.name).to.equal('Error');
+					round.getPlayer({ id: 'a' }).human = false;
+				});
+	});
+	it('should reveal the cardlock', () => {});
+	it('should determine a winner', () => {});
+	it('should declare draw when there is a tie for winners', () => {});
+	it('should get losing players to pick up cards', () => {});
+	it('should get all players to pick up cards if there is a tie for winners', () => {});
+	it('should signal that the round is complete', () => {});
+	it('should signal that the game is complete', () => {});
+
+
+
+
+	it('should play a full round', () => {
+		round.waitForPlayerLock(round)
+				.then(round.determineWinner)
+				.then(round.pickUpCards)
+				.then((round) => {
+					expect(round.newDealer).to.equal(1);
+				});
+	});
+	it('should declare no winner in case of a tie', () => {
+
 	});
 	it('should wait for all the players to cardlock', () => {
 		expect(waitForPlayers(round)).to.be.true;

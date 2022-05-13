@@ -24,8 +24,8 @@ StandardCardSuits.LIST.forEach((suit) => {
 	});
 });
 
-const copyDeck = (deck) => {
-	return deck.cards.map((card) => {
+const copyDeck = (cards) => {
+	return cards.map((card) => {
 		new StandardCard({ suit: card.suit, rank: card.rank, value: card.value });
 	});
 };
