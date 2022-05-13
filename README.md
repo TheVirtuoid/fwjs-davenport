@@ -1,6 +1,21 @@
 # fwjs-davenport
 Fun With JavaScript: The Davenport Card Game - By TheVirtuoid
 
+## To All My JavaScript Friends
+
+I'm making this repository public so that you can see the progress I make on this game.
+You'll see both the successes and the failures I'll encounter as I build the game. 
+This also gives everyone a place to make comments. Just keep the civil. :)
+
+## Status:
+
+| Date        | Data                                                                                                                    | 
+|-------------|-------------------------------------------------------------------------------------------------------------------------|
+| 13 May 2022 | Working on the 'Round' tests. This is about the tenth time I've refactored them. But I think I've finally got it right. |
+
+
+
+
 ## Rules of the game
 
 1. 2 to 4 players
@@ -38,4 +53,5 @@ Fun With JavaScript: The Davenport Card Game - By TheVirtuoid
    2. The Ace player does not pick up a card.
 3. If no face card is played, the player playing the Ace must draw two cards.
 4. If there is a tie for the winner, normal rules apply. Ace player will only pick up one card.
+5. If two or more Aces are played, they are treated as normal Aces and the optional rule does not apply.
 
