@@ -34,7 +34,7 @@ describe('getting a locked card from a player', () => {
 			{ id: 'b', human: false }
 		]));
 		playerA = round.getPlayer({ id: 'a' });
-		round.getLockedCard(playerA)
+		round.lockCards(record)
 				.then((round) => {
 					expect(true).to.be.false;
 				})

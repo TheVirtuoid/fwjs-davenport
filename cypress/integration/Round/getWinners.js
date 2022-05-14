@@ -20,7 +20,7 @@ describe('getting the winners', () => {
 
 	it('should get the winner PlayerA', () => {
 		round.lockCards(round)
-				.then(round.getWinners(round))
+				.then(round.getWinners)
 				.then((round) => {
 					expect(round.winners instanceof Array).to.be.true;
 					expect(round.winners.length).to.equal(1);
@@ -37,7 +37,7 @@ describe('getting the winners', () => {
 		}
 		deck.deal(playerB.deck);		 // this will deal a 10d to PlayerB
 		round.lockCards(round)
-				.then(round.getWinners(round))
+				.then(round.getWinners)
 				.then((round) => {
 					expect(round.winners.length).to.equal(2);
 				});

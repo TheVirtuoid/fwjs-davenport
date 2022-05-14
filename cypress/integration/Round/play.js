@@ -12,6 +12,7 @@
 			lockCards(round)
 				.then(getWinners)
 				.then(replaceCards)
+				.then(advanceDealer)
 				.catch(playerNotResponding)
 		}
  */
@@ -41,12 +42,11 @@ describe('play a round', () => {
 
 	it('should play complete round with no overall winner', () => {
 		round.lockCards(round)
-				.then(getWinners(round))
-				.then(replaceCards(round))
+				.then(round.getWinners)
+				.then(round.replaceCards)
+				.then(round.advanceDealer)
 				.then((round) => {
 					expect(round.gameOver).to.be.null;
-					expect(round.nextDealer instanceof Player).to.be.true;
-					expect(round.nextDealer.id).to.equal('b');
 				});
 	});
 	it('should play complete round with an overall winner', () => {
@@ -55,10 +55,10 @@ describe('play a round', () => {
 			playerA.deck.remove();
 		}
 		round.lockCards(round)
-				.then(getWinners(round))
-				.then(replaceCards(round))
+				.then(round.getWinners)
+				.then(round.replaceCards)
+				.then(round.advanceDealer)
 				.then((round) => {
-					expect(round.nextDealer).to.be.null;
 					expect(round.gameOver instanceof Player).to.be.true;
 					expect(round.gameOver.id).to.equal('a');
 				});
@@ -70,8 +70,9 @@ describe('play a round', () => {
 		]));
 		playerA = round.getPlayer({ id: 'a' });
 		round.lockCards(round)
-				.then(getWinners(round))
-				.then(replaceCards(round))
+				.then(round.getWinners)
+				.then(round.replaceCards)
+				.then(round.advanceDealer)
 				.then((round) => {
 					expect(true).to.be.false;
 				})
@@ -79,6 +80,5 @@ describe('play a round', () => {
 					expect(err.name).to.equal('Error');
 				});
 	});
-
 });
 

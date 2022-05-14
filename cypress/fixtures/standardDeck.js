@@ -66,7 +66,7 @@ const initializeTest = (playerIds) => {
 		return new Player({ id, human });
 	});
 	const roundNumber = 1;
-	const dealer = 0;
+	const dealer = players[0];
 	const round = new Round({ roundNumber, players, deck, dealer });
 	round.testing = {
 		makePlayerHuman: false,

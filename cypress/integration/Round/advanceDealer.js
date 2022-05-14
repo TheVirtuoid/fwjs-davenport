@@ -1,6 +1,6 @@
 import {initializeTest} from "../../fixtures/standardDeck";
 
-describe('replace losing cards', () => {
+describe('advance the dealer', () => {
 	let round;
 	let roundNumber;
 	let dealer;
@@ -18,29 +18,27 @@ describe('replace losing cards', () => {
 		playerB = round.getPlayer({ id: 'b' });
 	});
 
-	it('should replace card of PlayerB', () => {
+	it('should advance the dealer', () => {
 		round.lockCards(round)
 				.then(round.getWinners)
 				.then(round.replaceCards)
+				.then(round.advanceDealer)
 				.then((round) => {
-					expect(playerA.deck.cardCount).to.equal(4);
-					expect(playerB.deck.cardCount).to.equal(5);
+					expect(round.nextDealer instanceof Player).to.be.true;
+					expect(round.nextDealer.id).to.equal(playerB.id);
 				});
 	});
-	it('should replace ALL cards due to tie', () => {
-		// we need to deal more cards to make sure they select the same value card;
-		// we use a throwaway deck in order that PlayerB can get a 10
-		const throwAwayDeck = new Deck();
-		for (let i = 1; i <= 12; i++) {
-			deck.deal(throwAwayDeck);
+	it('should set dealer to null if game is over', () => {
+		// remove all PlayerA cards except for the 10
+		for(let i = 1; i <= 4; i++) {
+			playerA.deck.remove();
 		}
-		deck.deal(playerB.deck);		 // this will deal a 10d to PlayerB
 		round.lockCards(round)
 				.then(round.getWinners)
 				.then(round.replaceCards)
+				.then(round.advanceDealer)
 				.then((round) => {
-					expect(playerA.deck.cardCount).to.equal(5);
-					expect(playerB.deck.cardCount).to.equal(5);
+					expect(round.nextDealer).to.be.null;
 				});
 	});
 });
