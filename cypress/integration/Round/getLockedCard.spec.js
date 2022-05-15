@@ -1,6 +1,6 @@
 import Deck from "@virtuoid/deck";
 import {copyDeck, standardCardDeck, dealCards, initializeTest, valueMapping} from "../../fixtures/standardDeck";
-import {StandardCardRanks, StandardCardSuits} from "@virtuoid/standard-card";
+import {StandardCard, StandardCardRanks, StandardCardSuits} from "@virtuoid/standard-card";
 
 describe('getting a locked card from a player', () => {
 	let round;
@@ -21,14 +21,14 @@ describe('getting a locked card from a player', () => {
 	});
 
 	it('should lock high card for Player0', () => {
-		const playerACard = new Card({
+		const playerACard = new StandardCard({
 			suit: StandardCardSuits.CLUB,
 			rank: StandardCardRanks.TEN,
 			value: valueMapping.get(StandardCardRanks.TEN)
 		});
 		round.getLockedCard(playerA)
 				.then((player) => {
-					expect(player.lock.is(playerACard)).to.be.true;
+					expect(player.lockedCard.is(playerACard)).to.be.true;
 				});
 	});
 
@@ -39,12 +39,12 @@ describe('getting a locked card from a player', () => {
 		]));
 		playerA = round.getPlayer({ id: 'a' });
 		round.getLockedCard(playerA)
-				.then((player) => {
+				.then(() => {
 					expect(true).to.be.false;
 				})
 				.catch((err) => {
 					expect(err.name).to.equal('Error');
-					expect(playerA.lock).to.be.null;
+					expect(playerA.lockedCard).to.be.null;
 				});
 	})
 });

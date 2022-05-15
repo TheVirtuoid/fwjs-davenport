@@ -1,4 +1,5 @@
 import {initializeTest} from "../../fixtures/standardDeck";
+import Player from "../../../src/Player/Player";
 
 describe('advance the dealer', () => {
 	let round;
@@ -19,7 +20,7 @@ describe('advance the dealer', () => {
 	});
 
 	it('should advance the dealer', () => {
-		round.lockCards(round)
+		round.lockCards()
 				.then(round.getWinners)
 				.then(round.replaceCards)
 				.then(round.advanceDealer)
@@ -33,7 +34,7 @@ describe('advance the dealer', () => {
 		for(let i = 1; i <= 4; i++) {
 			playerA.deck.remove();
 		}
-		round.lockCards(round)
+		round.lockCards()
 				.then(round.getWinners)
 				.then(round.replaceCards)
 				.then(round.advanceDealer)

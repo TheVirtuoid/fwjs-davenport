@@ -1,4 +1,5 @@
 import {initializeTest} from "../../fixtures/standardDeck";
+import Deck from "@virtuoid/deck";
 
 describe('getting the winners', () => {
 	let round;
@@ -19,7 +20,7 @@ describe('getting the winners', () => {
 	});
 
 	it('should get the winner PlayerA', () => {
-		round.lockCards(round)
+		round.lockCards()
 				.then(round.getWinners)
 				.then((round) => {
 					expect(round.winners instanceof Array).to.be.true;
@@ -36,7 +37,7 @@ describe('getting the winners', () => {
 			deck.deal(throwAwayDeck);
 		}
 		deck.deal(playerB.deck);		 // this will deal a 10d to PlayerB
-		round.lockCards(round)
+		round.lockCards()
 				.then(round.getWinners)
 				.then((round) => {
 					expect(round.winners.length).to.equal(2);

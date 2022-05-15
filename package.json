@@ -1,6 +1,6 @@
 {
   "name": "fwjs-davenport",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Fun With JavaScript: The Davenport Card Game - by TheVirtuoid",
   "main": "index.js",
   "scripts": {

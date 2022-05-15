@@ -1,4 +1,5 @@
 import {initializeTest} from "../../fixtures/standardDeck";
+import Deck from "@virtuoid/deck";
 
 describe('replace losing cards', () => {
 	let round;
@@ -22,7 +23,7 @@ describe('replace losing cards', () => {
 		round.lockCards(round)
 				.then(round.getWinners)
 				.then(round.replaceCards)
-				.then((round) => {
+				.then(() => {
 					expect(playerA.deck.cardCount).to.equal(4);
 					expect(playerB.deck.cardCount).to.equal(5);
 				});
@@ -38,7 +39,7 @@ describe('replace losing cards', () => {
 		round.lockCards(round)
 				.then(round.getWinners)
 				.then(round.replaceCards)
-				.then((round) => {
+				.then(() => {
 					expect(playerA.deck.cardCount).to.equal(5);
 					expect(playerB.deck.cardCount).to.equal(5);
 				});

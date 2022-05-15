@@ -29,19 +29,15 @@ StandardCardSuits.LIST.forEach((suit) => {
 
 const copyDeck = (cards) => {
 	return cards.map((card) => {
-		new StandardCard({ suit: card.suit, rank: card.rank, value: card.value });
+		return new StandardCard({ suit: card.suit, rank: card.rank, value: card.value });
 	});
 };
 
 const dealCards = (deck, round) => {
 	const player0 = round.getPlayer({ id: 'a' });
 	const player1 = round.getPlayer({ id: 'b' });
-	const player2 = round.getPlayer({ id: 'c' });
-	const player3 = round.getPlayer({ id: 'd' });
 	for(let i = 0; i < 5; i++) {
 		deck.deal(player1.deck);
-		if (player2) deck.deal(player2.deck);
-		if (player3) deck.deal(player3.deck);
 		deck.deal(player0.deck);
 	}
 }
@@ -62,7 +58,7 @@ const dealCards = (deck, round) => {
 const initializeTest = (playerIds) => {
 	const deck = new Deck({ cards: copyDeck(standardCardDeck)});
 	const players = playerIds.map((args) => {
-		const { id, human } = args;
+		const { id, human = false } = args;
 		return new Player({ id, human });
 	});
 	const roundNumber = 1;

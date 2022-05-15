@@ -1,5 +1,6 @@
 import Round from "../../../src/Round/Round";
 import Player from "../../../src/Player/Player";
+import Deck from "@virtuoid/deck";
 
 const roundNumber = 1;
 const players = [ new Player({ id: 'a' }), new Player({ id: 'b' }) ];

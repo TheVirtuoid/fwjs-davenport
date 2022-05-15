@@ -20,7 +20,7 @@
 
 
 import Player from './../../../src/Player/Player';
-import { initializeTest } from './../../fixtures/standardDeck';
+import { initializeTest } from '../../fixtures/standardDeck';
 
 describe('play a round', () => {
 	let round;
@@ -73,7 +73,7 @@ describe('play a round', () => {
 				.then(round.getWinners)
 				.then(round.replaceCards)
 				.then(round.advanceDealer)
-				.then((round) => {
+				.then(() => {
 					expect(true).to.be.false;
 				})
 				.catch((err) => {

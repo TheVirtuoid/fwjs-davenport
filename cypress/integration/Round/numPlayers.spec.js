@@ -1,7 +1,16 @@
+import Round from "../../../src/Round/Round";
+import Player from "../../../src/Player/Player";
+import Deck from "@virtuoid/deck";
+
 describe('numPlayers', () => {
 	let round;
+	const players = [ new Player({ id: 'a' }), new Player({ id: 'b' })];
 	beforeEach( () => {
-		round = new Round({ roundNumber: 1, players: [new Player({ id: 'a' }), new Player({ id: 'b' }) ], dealer: 0, deck: new Deck()});
+		round = new Round({
+			roundNumber: 1,
+			players,
+			dealer: players[0],
+			deck: new Deck()});
 	});
 	it('should return the number of players', () => {
 		expect(round.numPlayers).to.equal(2);

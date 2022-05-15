@@ -1,6 +1,4 @@
-import Deck from "@virtuoid/deck";
-import {copyDeck, standardCardDeck, dealCards, initializeTest, valueMapping} from "../../fixtures/standardDeck";
-import {StandardCardRanks, StandardCardSuits} from "@virtuoid/standard-card";
+import { initializeTest } from "../../fixtures/standardDeck";
 
 describe('getting a locked card from a player', () => {
 	let round;
@@ -22,9 +20,9 @@ describe('getting a locked card from a player', () => {
 
 	it('should lock cards for all players', () => {
 		round.lockCards()
-				.then((round) => {
-					expect(playerA.lock).to.not.be.null;
-					expect(playerB.lock).to.not.be.null;
+				.then(() => {
+					expect(playerA.lockedCard).to.not.be.null;
+					expect(playerB.lockedCard).to.not.be.null;
 				});
 	});
 
@@ -34,13 +32,13 @@ describe('getting a locked card from a player', () => {
 			{ id: 'b', human: false }
 		]));
 		playerA = round.getPlayer({ id: 'a' });
-		round.lockCards(record)
-				.then((round) => {
+		round.lockCards(round)
+				.then(() => {
 					expect(true).to.be.false;
 				})
 				.catch((err) => {
 					expect(err.name).to.equal('Error');
-					expect(playerA.lock).to.be.null;
+					expect(playerA.lockedCard).to.be.null;
 				});
 	})
 });
