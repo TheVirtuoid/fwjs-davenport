@@ -4,7 +4,8 @@
   "description": "Fun With JavaScript: The Davenport Card Game - by TheVirtuoid",
   "main": "index.js",
   "scripts": {
-    "test": "cypress run"
+    "test": "cypress run",
+    "test:live": "cypress open"
   },
   "repository": {
     "type": "git",
@@ -26,7 +27,7 @@
     "cypress": "^9.6.0"
   },
   "dependencies": {
-    "@virtuoid/deck": "^1.1.0",
+    "@virtuoid/deck": "^1.2.0",
     "@virtuoid/standard-card": "^1.0.0"
   }
 }

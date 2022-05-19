@@ -68,6 +68,10 @@ export default class Round {
 		return this.#gameOver;
 	}
 
+	set gameOver(value) {
+		this.#gameOver = value;
+	}
+
 	get players () {
 		return this.#players;
 	}
@@ -130,10 +134,14 @@ export default class Round {
 		return Promise.resolve(round);
 	}
 
-	advanceDealer (round) {
-		let dealerIndex = round.players.findIndex((player) => player === round.dealer) + 1;
-		dealerIndex = dealerIndex === round.players.length ? 0 : dealerIndex;
-		round.nextDealer = round.players[dealerIndex];
+	checkForGameOver (round) {
+		round.nextDealer = null;
+		round.gameOver = round.players.find((player) => player.deck.cardCount === 0) || null;
+		if (!round.gameOver) {
+			let dealerIndex = round.players.findIndex((player) => player === round.dealer) + 1;
+			dealerIndex = dealerIndex === round.players.length ? 0 : dealerIndex;
+			round.nextDealer = round.players[dealerIndex];
+		}
 		return Promise.resolve(round);
 	}
 

@@ -20,7 +20,8 @@ describe('replace losing cards', () => {
 	});
 
 	it('should replace card of PlayerB', () => {
-		round.lockCards(round)
+		cy.wrap(round)
+				.then(round.lockCards)
 				.then(round.getWinners)
 				.then(round.replaceCards)
 				.then(() => {
@@ -36,12 +37,13 @@ describe('replace losing cards', () => {
 			deck.deal(throwAwayDeck);
 		}
 		deck.deal(playerB.deck);		 // this will deal a 10d to PlayerB
-		round.lockCards(round)
+		cy.wrap(round)
+				.then(round.lockCards)
 				.then(round.getWinners)
 				.then(round.replaceCards)
 				.then(() => {
 					expect(playerA.deck.cardCount).to.equal(5);
-					expect(playerB.deck.cardCount).to.equal(5);
+					expect(playerB.deck.cardCount).to.equal(6);			// 6 because we dealt the extra card!
 				});
 	});
 });

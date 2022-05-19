@@ -20,10 +20,11 @@ describe('advance the dealer', () => {
 	});
 
 	it('should advance the dealer', () => {
-		round.lockCards()
+		cy.wrap(round)
+				.then(round.lockCards)
 				.then(round.getWinners)
 				.then(round.replaceCards)
-				.then(round.advanceDealer)
+				.then(round.checkForGameOver)
 				.then((round) => {
 					expect(round.nextDealer instanceof Player).to.be.true;
 					expect(round.nextDealer.id).to.equal(playerB.id);
@@ -34,10 +35,11 @@ describe('advance the dealer', () => {
 		for(let i = 1; i <= 4; i++) {
 			playerA.deck.remove();
 		}
-		round.lockCards()
+		cy.wrap(round)
+				.then(round.lockCards)
 				.then(round.getWinners)
 				.then(round.replaceCards)
-				.then(round.advanceDealer)
+				.then(round.checkForGameOver)
 				.then((round) => {
 					expect(round.nextDealer).to.be.null;
 				});

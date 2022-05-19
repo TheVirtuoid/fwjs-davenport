@@ -34,9 +34,13 @@ export default class Player {
 		return this.#lockedCard;
 	}
 
+	set lockedCard(card) {
+		this.#lockedCard = card;
+	}
+
 	getLockedCard() {
 		if (!this.#human) {
-			this.#deck.sort((cardA, cardB) => cardA.value - cardB.value);
+			this.#deck.sort((cardA, cardB) => cardB.value - cardA.value);
 			this.#lockedCard = this.#deck.remove();
 			return Promise.resolve(this);
 		} else {

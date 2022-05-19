@@ -19,7 +19,8 @@ describe('getting a locked card from a player', () => {
 	});
 
 	it('should lock cards for all players', () => {
-		round.lockCards()
+		cy.wrap(round)
+				.then(round.lockCards)
 				.then(() => {
 					expect(playerA.lockedCard).to.not.be.null;
 					expect(playerB.lockedCard).to.not.be.null;
@@ -32,13 +33,21 @@ describe('getting a locked card from a player', () => {
 			{ id: 'b', human: false }
 		]));
 		playerA = round.getPlayer({ id: 'a' });
-		round.lockCards(round)
-				.then(() => {
-					expect(true).to.be.false;
-				})
-				.catch((err) => {
-					expect(err.name).to.equal('Error');
-					expect(playerA.lockedCard).to.be.null;
+		function promiseTest(round) {
+			return new Promise((resolve, reject) => {
+				round.lockCards(round)
+						.then((round) => {
+							resolve('');
+						})
+						.catch((err) => {
+							resolve(err.name);
+						})
+			});
+		}
+		cy.wrap(round)
+				.then(promiseTest)
+				.then((result) => {
+					expect(result).to.equal('Error');
 				});
 	})
 });

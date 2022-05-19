@@ -12,7 +12,7 @@
 			lockCards(round)
 				.then(getWinners)
 				.then(replaceCards)
-				.then(advanceDealer)
+				.then(checkForGameOver)
 				.catch(playerNotResponding)
 		}
  */
@@ -31,6 +31,10 @@ describe('play a round', () => {
 	let playerA;
 	let playerB;
 
+	const returnRound = () => {
+		return Promise.resolve(round);
+	}
+
 	beforeEach( () => {
 		({ deck, players, roundNumber, dealer, round } = initializeTest([
 			{ id: 'a', human: false },
@@ -41,10 +45,11 @@ describe('play a round', () => {
 	});
 
 	it('should play complete round with no overall winner', () => {
-		round.lockCards(round)
+		cy.wrap(round)
+				.then(round.lockCards)
 				.then(round.getWinners)
 				.then(round.replaceCards)
-				.then(round.advanceDealer)
+				.then(round.checkForGameOver)
 				.then((round) => {
 					expect(round.gameOver).to.be.null;
 				});
@@ -54,10 +59,11 @@ describe('play a round', () => {
 		for(let i = 1; i <= 4; i++) {
 			playerA.deck.remove();
 		}
-		round.lockCards(round)
+		cy.wrap(round)
+				.then(round.lockCards)
 				.then(round.getWinners)
 				.then(round.replaceCards)
-				.then(round.advanceDealer)
+				.then(round.checkForGameOver)
 				.then((round) => {
 					expect(round.gameOver instanceof Player).to.be.true;
 					expect(round.gameOver.id).to.equal('a');
@@ -69,15 +75,24 @@ describe('play a round', () => {
 			{ id: 'b', human: false }
 		]));
 		playerA = round.getPlayer({ id: 'a' });
-		round.lockCards(round)
-				.then(round.getWinners)
-				.then(round.replaceCards)
-				.then(round.advanceDealer)
-				.then(() => {
-					expect(true).to.be.false;
-				})
-				.catch((err) => {
-					expect(err.name).to.equal('Error');
+		function promiseReject(round) {
+			return new Promise((resolve, reject) => {
+				round.lockCards(round)
+						.then(round.getWinners)
+						.then(round.replaceCards)
+						.then(round.checkForGameOver)
+						.then((round) => {
+							resolve('');
+						})
+						.catch((err) => {
+							resolve(err.name);
+						});
+			});
+		}
+		cy.wrap(round)
+				.then(promiseReject)
+				.then((name) => {
+					expect(name).to.equal('Error');
 				});
 	});
 });
