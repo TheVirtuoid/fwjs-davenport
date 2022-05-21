@@ -19,7 +19,7 @@ describe('advance the dealer', () => {
 		playerB = round.getPlayer({ id: 'b' });
 	});
 
-	it('should advance the dealer', () => {
+	xit('should advance the dealer', () => {
 		cy.wrap(round)
 				.then(round.lockCards)
 				.then(round.getWinners)
@@ -30,7 +30,7 @@ describe('advance the dealer', () => {
 					expect(round.nextDealer.id).to.equal(playerB.id);
 				});
 	});
-	it('should set dealer to null if game is over', () => {
+	xit('should set dealer to null if game is over', () => {
 		// remove all PlayerA cards except for the 10
 		for(let i = 1; i <= 4; i++) {
 			playerA.deck.remove();

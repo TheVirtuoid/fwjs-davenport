@@ -9,13 +9,13 @@ describe('getPlayer', () => {
 	const roundNumber = 1;
 	const deck = new Deck();
 	const dealer = players[0];
-	it('should return the Player instance if the player is found', () => {
+	xit('should return the Player instance if the player is found', () => {
 		const round = new Round({ roundNumber, players, dealer, deck });
 		const player = round.getPlayer({ id: 'a' });
 		expect(player instanceof Player).to.be.true;
 		expect(player.id).to.equal('a');
 	});
-	it('should return null if player cannot be found', () => {
+	xit('should return null if player cannot be found', () => {
 		const round = new Round({ roundNumber, players, dealer, deck });
 		const player = round.getPlayer({ id: 'bad' });
 		expect(player).to.be.null;

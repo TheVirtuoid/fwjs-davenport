@@ -19,7 +19,7 @@ describe('getting the winners', () => {
 		playerB = round.getPlayer({ id: 'b' });
 	});
 
-	it('should get the winner PlayerA', () => {
+	xit('should get the winner PlayerA', () => {
 		cy.wrap(round)
 				.then(round.lockCards)
 				.then(round.getWinners)
@@ -31,7 +31,7 @@ describe('getting the winners', () => {
 				});
 	});
 
-	it('should get a tie', () => {
+	xit('should get a tie', () => {
 		// we need to deal more cards to make sure they select the same value card;
 		// we use a throwaway deck in order that PlayerB can get a 10
 		const throwAwayDeck = new Deck();

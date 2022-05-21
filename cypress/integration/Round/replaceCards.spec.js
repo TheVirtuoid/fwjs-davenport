@@ -19,7 +19,7 @@ describe('replace losing cards', () => {
 		playerB = round.getPlayer({ id: 'b' });
 	});
 
-	it('should replace card of PlayerB', () => {
+	xit('should replace card of PlayerB', () => {
 		cy.wrap(round)
 				.then(round.lockCards)
 				.then(round.getWinners)
@@ -29,7 +29,7 @@ describe('replace losing cards', () => {
 					expect(playerB.deck.cardCount).to.equal(5);
 				});
 	});
-	it('should replace ALL cards due to tie', () => {
+	xit('should replace ALL cards due to tie', () => {
 		// we need to deal more cards to make sure they select the same value card;
 		// we use a throwaway deck in order that PlayerB can get a 10
 		const throwAwayDeck = new Deck();
