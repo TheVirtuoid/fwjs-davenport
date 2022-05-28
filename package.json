@@ -4,8 +4,9 @@
   "description": "Fun With JavaScript: The Davenport Card Game - by TheVirtuoid",
   "main": "index.js",
   "scripts": {
-    "test": "cypress run",
-    "test:live": "cypress open"
+    "test:e2e:ci": "cypress run",
+    "test:e2e": "cypress open",
+    "build:test": "npx rollup --config rollup.test.config.js"
   },
   "repository": {
     "type": "git",
@@ -30,5 +31,6 @@
     "@virtuoid/deck": "^1.2.0",
     "@virtuoid/standard-card": "^1.0.0",
     "uuid": "^8.3.2"
-  }
+  },
+  "type": "module"
 }

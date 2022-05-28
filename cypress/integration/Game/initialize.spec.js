@@ -5,10 +5,10 @@
 		2. Players are dealt starting hand
 
  */
-import Player from "../../../src/Player/Player";
-import Game from "../../../src/Game/Game";
+import Player from "../../../src/Player/Player.js";
+import Game from "../../../src/Game/Game.js";
 import {StandardCard, StandardCardRanks, StandardCardSuits} from "@virtuoid/standard-card";
-import {copyDeck, standardCardDeck} from "../../fixtures/standardDeck";
+import {copyDeck, standardCardDeck} from "../../fixtures/standardDeck.js";
 
 let game;
 let playerA;

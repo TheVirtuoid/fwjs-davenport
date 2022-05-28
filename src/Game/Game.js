@@ -1,8 +1,8 @@
 import { v4 as uuidV4 } from 'uuid';
-import Player from "../Player/Player";
+import Player from "../Player/Player.js";
 import {StandardCard, StandardCardRanks, StandardCardSuits} from "@virtuoid/standard-card";
 import Deck from "@virtuoid/deck";
-import Round from "../Round/Round";
+import Round from "../Round/Round.js";
 
 const valueMap = new Map();
 valueMap.set(StandardCardRanks.ACE, 1);
@@ -94,9 +94,9 @@ export default class Game {
 		}
 	}
 
-	start() {
+	async start () {
 		this.#roundNumber = 1;
-		while (!this.#gameOver && !this.#error.err) {
+		while (!this.#gameOver && !this.#error?.err) {
 			const round = new Round({
 				roundNumber: this.#roundNumber,
 				dealer: this.#dealer,
@@ -104,7 +104,7 @@ export default class Game {
 				deck: this.#deck
 			});
 			this.#rounds.push(round);
-			round.play(round);
+			await round.play(round);
 			this.#gameOver = round.gameOver;
 			this.#error = round.error;
 		}

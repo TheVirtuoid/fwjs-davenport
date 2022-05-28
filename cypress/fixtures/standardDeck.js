@@ -1,7 +1,7 @@
 import { StandardCardSuits, StandardCardRanks, StandardCard } from "@virtuoid/standard-card";
 import Deck from "@virtuoid/deck";
-import Player from "../../src/Player/Player";
-import Round from "../../src/Round/Round";
+import Player from "../../src/Player/Player.js";
+import Round from "../../src/Round/Round.js";
 
 const valueMapping = new Map();
 valueMapping.set(StandardCardRanks.ACE, 1);

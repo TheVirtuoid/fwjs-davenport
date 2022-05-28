@@ -20,7 +20,7 @@
 
  */
 
-import Game from "../../../src/Game/Game";
+import Game from "../../../src/Game/Game.js";
 
 describe('constructing the game', () => {
 	it('should return a Game', () => {

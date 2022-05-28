@@ -1,4 +1,4 @@
-import Player from "../Player/Player";
+import Player from "../Player/Player.js";
 import Deck from "@virtuoid/deck";
 
 export default class Round {
@@ -151,7 +151,7 @@ export default class Round {
 					.then(this.#checkForGameOver.bind(this))
 					.then(resolve)
 					.catch((err) => {
-						this.#gameOver = null;
+						this.#gameOver = true;
 						this.#error = { exception: err, player: err.player };
 						resolve(this);
 					});

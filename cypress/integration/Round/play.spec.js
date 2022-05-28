@@ -19,8 +19,7 @@
 
 
 
-import Player from './../../../src/Player/Player';
-import { initializeTest } from '../../fixtures/standardDeck';
+import { initializeTest } from '../../fixtures/standardDeck.js';
 import {StandardCard, StandardCardRanks, StandardCardSuits} from "@virtuoid/standard-card";
 
 describe('play a round', () => {
@@ -87,7 +86,7 @@ describe('play a round', () => {
 		cy.wrap(round)
 				.then(round.play.bind(round))
 				.then((round) => {
-					expect(round.gameOver).to.be.null;
+					expect(round.gameOver).to.be.true;
 					expect(round.error.exception.name).to.equal('Error');
 					expect(round.error.player).to.equal(playerA);
 				});

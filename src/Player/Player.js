@@ -1,4 +1,5 @@
 import Deck from "@virtuoid/deck";
+import { v4 as uuidV4 } from 'uuid';
 
 export default class Player {
 	#id;
@@ -8,7 +9,7 @@ export default class Player {
 
 	constructor(playerArguments = {}) {
 		const { id, human = false } = playerArguments;
-		this.#id = id;
+		this.#id = id || uuidV4();
 		this.#human = human;
 		this.#lockedCard = null;
 		this.#deck = new Deck();
@@ -22,20 +23,12 @@ export default class Player {
 		return this.#human;
 	}
 
-	set human(value) {
-		this.#human = value;
-	}
-
 	get deck () {
 		return this.#deck;
 	}
 
 	get lockedCard() {
 		return this.#lockedCard;
-	}
-
-	set lockedCard(card) {
-		this.#lockedCard = card;
 	}
 
 	getLockedCard() {
