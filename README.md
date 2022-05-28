@@ -12,6 +12,8 @@ This also gives everyone a place to make comments. Just keep the civil. :)
 | Date        | Data                                                                                                                    | 
 |-------------|-------------------------------------------------------------------------------------------------------------------------|
 | 13 May 2022 | Working on the 'Round' tests. This is about the tenth time I've refactored them. But I think I've finally got it right. |
+| 28 May 2022 | FINALLY finished the 'Round' tests and the others tests. Had to fix my testing suite as it was configured wrong. |
+
 
 
 
