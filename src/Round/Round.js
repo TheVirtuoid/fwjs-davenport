@@ -1,4 +1,4 @@
-import Player from "../Player/Player";
+import Player from "../Player/Player.js";
 import Deck from "@virtuoid/deck";
 
 export default class Round {
@@ -6,9 +6,9 @@ export default class Round {
 	#players;
 	#roundNumber;
 	#dealer;
-	#nextDealer;
 	#winners;
 	#gameOver;
+	#error;
 
 	constructor(roundArguments = {}) {
 		const {deck, players, roundNumber, dealer} = roundArguments;
@@ -38,6 +38,8 @@ export default class Round {
 		this.#players = players;
 		this.#roundNumber = integerRoundNumber;
 		this.#dealer = dealer;
+		this.#gameOver = null;
+		this.#error = null;
 	}
 
 	get deck() {
@@ -52,14 +54,6 @@ export default class Round {
 		return this.#dealer;
 	}
 
-	get nextDealer () {
-		return this.#nextDealer;
-	}
-
-	set nextDealer(value) {
-		this.#nextDealer = value;
-	}
-
 	get winners () {
 		return this.#winners;
 	}
@@ -68,27 +62,23 @@ export default class Round {
 		return this.#gameOver;
 	}
 
-	set gameOver(value) {
-		this.#gameOver = value;
-	}
-
 	get players () {
 		return this.#players;
-	}
-
-	get winners () {
-		return this.#winners;
 	}
 
 	get numPlayers () {
 		return this.#players.length;
 	}
 
-	clearWinners() {
+	get error() {
+		return this.#error;
+	}
+
+	#clearWinners() {
 		this.#winners = [];
 	}
 
-	addWinner(player) {
+	#addWinner(player) {
 		this.#winners.push(player);
 	}
 
@@ -97,63 +87,75 @@ export default class Round {
 		return this.#players.find((player) => player.id === id) || null;
 	}
 
-	lockCards (round) {
+	#lockCards () {
+		const promises = [];
+		this.#players.forEach((player) => {
+			promises.push(this.#getLockedCard(player));
+		});
+		const round = this;
 		return new Promise((resolve, reject) => {
-			const promises = [];
-			round.players.forEach((player) => {
-				promises.push(round.getLockedCard(player));
-			});
 			Promise.all(promises)
 					.then(() => resolve(round))
 					.catch((err) => reject(err));
 		});
 	}
 
-	getWinners (round) {
+	#getWinners () {
 		let highCardValue = -1;
-		round.clearWinners()
-		round.players.forEach((player) => {
+		this.#clearWinners()
+		this.#players.forEach((player) => {
 			if (player.lockedCard.value > highCardValue) {
-				round.clearWinners();
-				round.addWinner(player);
+				this.#clearWinners();
+				this.#addWinner(player);
 				highCardValue = player.lockedCard.value;
 			} else if (player.lockedCard.value === highCardValue) {
-				round.addWinner(player);
+				this.#addWinner(player);
 			}
 		});
-		return Promise.resolve(round);
+		return Promise.resolve(this);
 	}
 
-	replaceCards (round) {
-		const checkWinner = round.winners.length === 1;
-		round.players.forEach((player) => {
-			if (!checkWinner || checkWinner && player !== round.winners[0]) {
-				round.deck.deal(player.deck);
+	#replaceCards () {
+		const checkWinner = this.winners.length === 1;
+		this.#players.forEach((player) => {
+			if (!checkWinner || checkWinner && player !== this.#winners[0]) {
+				this.#deck.deal(player.deck);
 			}
 		});
-		return Promise.resolve(round);
+		return Promise.resolve(this);
 	}
 
-	checkForGameOver (round) {
-		round.nextDealer = null;
-		round.gameOver = round.players.find((player) => player.deck.cardCount === 0) || null;
-		if (!round.gameOver) {
-			let dealerIndex = round.players.findIndex((player) => player === round.dealer) + 1;
-			dealerIndex = dealerIndex === round.players.length ? 0 : dealerIndex;
-			round.nextDealer = round.players[dealerIndex];
-		}
-		return Promise.resolve(round);
+	#checkForGameOver () {
+		this.#gameOver = this.#players.find((player) => player.deck.cardCount === 0) || null;
+		return Promise.resolve(this);
 	}
 
-	getLockedCard (player) {
+	#getLockedCard (player) {
 		return new Promise((resolve, reject) => {
 			player.getLockedCard()
 					.then(player => {
 						resolve(player);
 					})
 					.catch((err) => {
+						err.player = player;
 						reject(err);
 					});
 		});
 	}
+
+	play () {
+		return new Promise((resolve, reject) => {
+			this.#lockCards()
+					.then(this.#getWinners.bind(this))
+					.then(this.#replaceCards.bind(this))
+					.then(this.#checkForGameOver.bind(this))
+					.then(resolve)
+					.catch((err) => {
+						this.#gameOver = true;
+						this.#error = { exception: err, player: err.player };
+						resolve(this);
+					});
+		});
+	}
+
 }

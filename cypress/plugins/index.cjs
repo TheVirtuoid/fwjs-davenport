@@ -13,12 +13,18 @@
 // the project's config changing)
 
 /**
- * @type {Cypress.PluginConfig}
+ * @type {WebpackPreprocessor}
  */
 // eslint-disable-next-line no-unused-vars
-
 const webpackPreprocessor = require('@cypress/webpack-preprocessor');
 const webpackOptions= webpackPreprocessor.defaultOptions;
 module.exports = (on) => {
+/*
+	webpackOptions.webpackOptions.module.rules[0].use[0].options = {
+		"presets": [
+			["@babel/preset-env", { "useBuiltIns":  false }]
+		]
+	}
+*/
 	on('file:preprocessor', webpackPreprocessor(webpackOptions));
 }

@@ -19,8 +19,8 @@
 
 
 
-import Player from './../../../src/Player/Player';
-import { initializeTest } from '../../fixtures/standardDeck';
+import { initializeTest } from '../../fixtures/standardDeck.js';
+import {StandardCard, StandardCardRanks, StandardCardSuits} from "@virtuoid/standard-card";
 
 describe('play a round', () => {
 	let round;
@@ -44,55 +44,51 @@ describe('play a round', () => {
 		playerB = round.getPlayer({ id: 'b' });
 	});
 
-	it('should play complete round with no overall winner', () => {
+	it('should play a complete round with no overall winner', () => {
 		cy.wrap(round)
-				.then(round.lockCards)
-				.then(round.getWinners)
-				.then(round.replaceCards)
-				.then(round.checkForGameOver)
+				.then(round.play.bind(round))
 				.then((round) => {
 					expect(round.gameOver).to.be.null;
+					expect(round.error).to.be.null;
+					expect(round.winners instanceof Array).to.be.true;
+					expect(round.winners.length).to.equal(1);
+					expect(round.winners[0]).to.equal(playerA);
 				});
 	});
-	it('should play complete round with an overall winner', () => {
+	it('should play a complete round with an overall winner', () => {
 		// remove all PlayerA cards except for the 10
 		for(let i = 1; i <= 4; i++) {
 			playerA.deck.remove();
 		}
 		cy.wrap(round)
-				.then(round.lockCards)
-				.then(round.getWinners)
-				.then(round.replaceCards)
-				.then(round.checkForGameOver)
+				.then(round.play.bind(round))
 				.then((round) => {
-					expect(round.gameOver instanceof Player).to.be.true;
-					expect(round.gameOver.id).to.equal('a');
+					expect(round.gameOver).to.equal(playerA);
+					expect(round.error).to.be.null;
 				});
 	});
-	it('should error out because a player cannot lock a card', () => {
+	it('should play a complete round with a tie for the winners', () => {
+		// give playerB a high card that matches playerA high card
+		playerB.deck.add(new StandardCard({ suit: StandardCardSuits.HEART, rank: StandardCardRanks.TEN, value: 10 }));
+		cy.wrap(round)
+				.then(round.play.bind(round))
+				.then((round) => {
+					expect(round.gameOver).to.be.null;
+					expect(round.winners.length).to.equal(2);
+				});
+	});
+	it('should error out because a player did not lock a card', () => {
 		({ deck, players, roundNumber, dealer, round } = initializeTest([
 			{ id: 'a', human: true },
 			{ id: 'b', human: false }
 		]));
 		playerA = round.getPlayer({ id: 'a' });
-		function promiseReject(round) {
-			return new Promise((resolve, reject) => {
-				round.lockCards(round)
-						.then(round.getWinners)
-						.then(round.replaceCards)
-						.then(round.checkForGameOver)
-						.then((round) => {
-							resolve('');
-						})
-						.catch((err) => {
-							resolve(err.name);
-						});
-			});
-		}
 		cy.wrap(round)
-				.then(promiseReject)
-				.then((name) => {
-					expect(name).to.equal('Error');
+				.then(round.play.bind(round))
+				.then((round) => {
+					expect(round.gameOver).to.be.true;
+					expect(round.error.exception.name).to.equal('Error');
+					expect(round.error.player).to.equal(playerA);
 				});
 	});
 });

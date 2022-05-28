@@ -2,7 +2,7 @@
 // all are required
 
 import Round from "../../../src/Round/Round.js";
-import Player from "../../../src/Player/Player";
+import Player from "../../../src/Player/Player.js";
 import Deck from "@virtuoid/deck";
 
 const playerA = new Player({ id: 'a' });
