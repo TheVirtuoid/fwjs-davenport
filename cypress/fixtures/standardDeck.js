@@ -52,8 +52,6 @@ const dealCards = (deck, round) => {
 //				player2: '2c', '6c', '10c', 'ad', '5d'
 //				player3: '3c', '7c', 'jc', '2d', '6d'
 //
-//		Dealer is 0 index player (player0)
-//
 
 const initializeTest = (playerIds) => {
 	const deck = new Deck({ cards: copyDeck(standardCardDeck)});
@@ -62,14 +60,13 @@ const initializeTest = (playerIds) => {
 		return new Player({ id, human });
 	});
 	const roundNumber = 1;
-	const dealer = players[0];
-	const round = new Round({ roundNumber, players, deck, dealer });
+	const round = new Round({ roundNumber, players, deck});
 	round.testing = {
 		makePlayerHuman: false,
 		getTieGame: false
 	};
 	dealCards(deck, round);
-	return { deck, players, roundNumber, dealer, round };
+	return { deck, players, roundNumber, round };
 };
 
 export { standardCardDeck, standardCardDeckCopy, valueMapping, copyDeck, dealCards, initializeTest };

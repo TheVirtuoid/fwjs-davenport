@@ -1,6 +1,27 @@
 // const round = new Round({ roundNumber, players, deck });
 // all are required
 
+/*
+		A sample rond of Play
+
+		1. Each player locks a card
+		2. Cards are revealed
+		3. Winners are determined
+			3a. Single winner, continue on
+			3b. Two or more winners, there is no round winner
+		4. Non-winners draw cards (ensuring that cards are always available)
+		5. Game ends when a player has zero cards left
+		6. Repeat until overall winner
+
+		const playRound = async (round) => {
+			lockCards(round)
+				.then(getWinners)
+				.then(replaceCards)
+				.then(checkForGameOver)
+				.catch(playerNotResponding)
+		}
+ */
+
 import Round from "../../../src/Round/Round.js";
 import Player from "../../../src/Player/Player.js";
 import Deck from "@virtuoid/deck";
@@ -12,6 +33,10 @@ const roundNumber = 1;
 const deck = new Deck();
 
 describe('round constructor', () => {
+	it('should create a round instance', () => {
+		const round = new Round({ roundNumber, players, deck });
+		expect(round instanceof Round).to.be.true;
+	});
 	it('should throw exception if roundNumber missing', () => {
 		try {
 			new Round({ players, deck });

@@ -6,15 +6,15 @@ const roundNumber = 1;
 const players = [ new Player({ id: 'a' }), new Player({ id: 'b' }) ];
 const deck = new Deck();
 
-describe('roundNumber', () => {
-	it('should be able to read the roundNumber', () => {
+describe('gameOver', () => {
+	it('should be able to read the gameOver property', () => {
 		const round = new Round({ roundNumber, players, deck });
-		expect(round.roundNumber).to.equal(1);
+		expect(round.gameOver).to.be.false;
 	});
 	it('should not be able to change roundNumber', () => {
 		const round = new Round({ roundNumber, players, deck });
 		try {
-			round.roundNumber = 2;
+			round.gameOver = 'bad';
 			expect(true).to.be.false;
 		} catch (err) {
 			expect(err.name).to.equal('TypeError');

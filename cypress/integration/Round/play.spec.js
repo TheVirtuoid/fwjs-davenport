@@ -1,42 +1,16 @@
-/*
-		A sample rond of Play
-
-		1. Each player locks a card
-		2. Cards are revealed
-		3. Winners are determined
-				3a. Game ends if one or more winners have zero cards
-		4. Non-winners draw cards (ensuring that cards are always available)
-		5. Repeat until overall winner
-
-		const playRound = async (round) => {
-			lockCards(round)
-				.then(getWinners)
-				.then(replaceCards)
-				.then(checkForGameOver)
-				.catch(playerNotResponding)
-		}
- */
-
-
-
 import { initializeTest } from '../../fixtures/standardDeck.js';
 import {StandardCard, StandardCardRanks, StandardCardSuits} from "@virtuoid/standard-card";
 
 describe('play a round', () => {
 	let round;
 	let roundNumber;
-	let dealer;
 	let players;
 	let deck;
 	let playerA;
 	let playerB;
 
-	const returnRound = () => {
-		return Promise.resolve(round);
-	}
-
 	beforeEach( () => {
-		({ deck, players, roundNumber, dealer, round } = initializeTest([
+		({ deck, players, roundNumber, round } = initializeTest([
 			{ id: 'a', human: false },
 			{ id: 'b', human: false }
 		]));
@@ -48,7 +22,7 @@ describe('play a round', () => {
 		cy.wrap(round)
 				.then(round.play.bind(round))
 				.then((round) => {
-					expect(round.gameOver).to.be.null;
+					expect(round.gameOver).to.be.false;
 					expect(round.error).to.be.null;
 					expect(round.winners instanceof Array).to.be.true;
 					expect(round.winners.length).to.equal(1);
@@ -65,7 +39,9 @@ describe('play a round', () => {
 		cy.wrap(round)
 				.then(round.play.bind(round))
 				.then((round) => {
-					expect(round.gameOver).to.equal(playerA);
+					expect(round.gameOver).to.be.true;
+					expect(round.winners.length).to.equal(1);
+					expect(round.winners[0]).to.equal(playerA);
 					expect(round.error).to.be.null;
 					expect(playerA.deck.cardCount).to.equal(0);
 				});
@@ -76,14 +52,14 @@ describe('play a round', () => {
 		cy.wrap(round)
 				.then(round.play.bind(round))
 				.then((round) => {
-					expect(round.gameOver).to.be.null;
+					expect(round.gameOver).to.be.false;
 					expect(round.winners.length).to.equal(2);
 					expect(playerA.deck.cardCount).to.equal(5);
-					expect(playerB.deck.cardCount).to.equal(5);
+					expect(playerB.deck.cardCount).to.equal(6);
 				});
 	});
 	it('should error out because a player did not lock a card', () => {
-		({ deck, players, roundNumber, dealer, round } = initializeTest([
+		({ deck, players, roundNumber, round } = initializeTest([
 			{ id: 'a', human: true },
 			{ id: 'b', human: false }
 		]));
@@ -92,6 +68,7 @@ describe('play a round', () => {
 				.then(round.play.bind(round))
 				.then((round) => {
 					expect(round.gameOver).to.be.true;
+					expect(round.winners.length).to.equal(0);
 					expect(round.error.exception.name).to.equal('Error');
 					expect(round.error.player).to.equal(playerA);
 				});

@@ -6,15 +6,16 @@ const roundNumber = 1;
 const players = [ new Player({ id: 'a' }), new Player({ id: 'b' }) ];
 const deck = new Deck();
 
-describe('roundNumber', () => {
-	it('should be able to read the roundNumber', () => {
+describe('winners', () => {
+	it('should be able to read the winners', () => {
 		const round = new Round({ roundNumber, players, deck });
-		expect(round.roundNumber).to.equal(1);
+		expect(round.winners instanceof Array).to.be.true;
+		expect(round.winners.length).to.equal(0);
 	});
-	it('should not be able to change roundNumber', () => {
+	it('should not be able to change the winners', () => {
 		const round = new Round({ roundNumber, players, deck });
 		try {
-			round.roundNumber = 2;
+			round.winners = 'bad';
 			expect(true).to.be.false;
 		} catch (err) {
 			expect(err.name).to.equal('TypeError');

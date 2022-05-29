@@ -30,8 +30,9 @@ export default class Round {
 		this.#deck = deck;
 		this.#players = players;
 		this.#roundNumber = integerRoundNumber;
-		this.#gameOver = null;
+		this.#gameOver = false;
 		this.#error = null;
+		this.#winners = [];
 	}
 
 	get deck() {
@@ -48,10 +49,6 @@ export default class Round {
 
 	get gameOver () {
 		return this.#gameOver;
-	}
-
-	get players () {
-		return this.#players;
 	}
 
 	get numPlayers () {
@@ -114,7 +111,7 @@ export default class Round {
 	}
 
 	#checkForGameOver () {
-		this.#gameOver = this.#players.find((player) => player.deck.cardCount === 0) || null;
+		this.#gameOver = this.#winners.length === 1 && this.#winners[0].deck.cardCount === 0;
 		return Promise.resolve(this);
 	}
 
@@ -141,6 +138,7 @@ export default class Round {
 					.catch((err) => {
 						this.#gameOver = true;
 						this.#error = { exception: err, player: err.player };
+						this.#winners = [];
 						resolve(this);
 					});
 		});

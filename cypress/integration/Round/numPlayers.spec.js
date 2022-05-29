@@ -9,7 +9,6 @@ describe('numPlayers', () => {
 		round = new Round({
 			roundNumber: 1,
 			players,
-			dealer: players[0],
 			deck: new Deck()});
 	});
 	it('should return the number of players', () => {
