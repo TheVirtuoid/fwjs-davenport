@@ -29,6 +29,7 @@ export default class Game {
 	#gameOver;
 	#error;
 	#dealer;
+	#winner;
 
 	constructor(gameArguments = {}) {
 		const { id = uuidV4(), players = [] } = gameArguments;
@@ -66,6 +67,10 @@ export default class Game {
 
 	get error() {
 		return this.#error;
+	}
+
+	get winner() {
+		return this.#winner;
 	}
 
 	initialize(initializeArguments = {}) {
@@ -107,6 +112,7 @@ export default class Game {
 			await round.play(round);
 			this.#gameOver = round.gameOver;
 			this.#error = round.error;
+			this.#winner = this.#gameOver && this.#error ? round.winners[0] : null;
 		}
 	}
 

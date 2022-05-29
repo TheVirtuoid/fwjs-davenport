@@ -50,7 +50,8 @@ describe('start the rounds!', () => {
 		cy.wrap(null)
 				.then(() => game.start())
 				.then(() => {
-					expect(game.gameOver).to.equal(playerB);
+					expect(game.gameOver).to.be.true;
+					expect(game.winner).to.equal(playerA);
 					expect(game.error).to.be.null;
 				});
 	});
@@ -65,6 +66,7 @@ describe('start the rounds!', () => {
 				.then( () => game.start())
 				.then( () => {
 					expect(game.gameOver).to.be.true;
+					expect(game.winner).to.be.null;
 					expect(game.error.exception.name).to.equal('Error');
 					expect(game.error.player).to.equal(playerB);
 				})
