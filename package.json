@@ -6,7 +6,10 @@
   "scripts": {
     "test:e2e:ci": "cypress run",
     "test:e2e": "cypress open",
-    "build:test": "npx rollup --config rollup.test.config.js"
+    "build:test": "npx rollup --config rollup.test.config.js",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "repository": {
     "type": "git",
@@ -25,7 +28,8 @@
   "homepage": "https://github.com/TheVirtuoid/fwjs-davenport#readme",
   "devDependencies": {
     "@cypress/webpack-preprocessor": "^5.11.1",
-    "cypress": "^9.6.0"
+    "cypress": "^9.6.0",
+    "vite": "^2.9.9"
   },
   "dependencies": {
     "@virtuoid/deck": "^1.2.0",
