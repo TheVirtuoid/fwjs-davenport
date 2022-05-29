@@ -53,6 +53,8 @@ describe('play a round', () => {
 					expect(round.winners instanceof Array).to.be.true;
 					expect(round.winners.length).to.equal(1);
 					expect(round.winners[0]).to.equal(playerA);
+					expect(playerA.deck.cardCount).to.equal(4);
+					expect(playerB.deck.cardCount).to.equal(5);
 				});
 	});
 	it('should play a complete round with an overall winner', () => {
@@ -65,6 +67,7 @@ describe('play a round', () => {
 				.then((round) => {
 					expect(round.gameOver).to.equal(playerA);
 					expect(round.error).to.be.null;
+					expect(playerA.deck.cardCount).to.equal(0);
 				});
 	});
 	it('should play a complete round with a tie for the winners', () => {
@@ -75,6 +78,8 @@ describe('play a round', () => {
 				.then((round) => {
 					expect(round.gameOver).to.be.null;
 					expect(round.winners.length).to.equal(2);
+					expect(playerA.deck.cardCount).to.equal(5);
+					expect(playerB.deck.cardCount).to.equal(5);
 				});
 	});
 	it('should error out because a player did not lock a card', () => {

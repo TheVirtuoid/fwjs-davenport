@@ -5,13 +5,12 @@ export default class Round {
 	#deck;
 	#players;
 	#roundNumber;
-	#dealer;
 	#winners;
 	#gameOver;
 	#error;
 
 	constructor(roundArguments = {}) {
-		const {deck, players, roundNumber, dealer} = roundArguments;
+		const { deck, players, roundNumber } = roundArguments;
 		if (!(deck instanceof Deck)) {
 			throw new TypeError(`"deck" property must be an instance of the Deck class.`);
 		}
@@ -28,16 +27,9 @@ export default class Round {
 		if (integerRoundNumber < 1) {
 			throw new RangeError(`"roundNumber" must be a positive number.`);
 		}
-		if (!(dealer instanceof Player)) {
-			throw new TypeError(`"dealer" property not instance of Player.`);
-		}
-		if (!players.some((player) => player === dealer)) {
-			throw new RangeError(`"dealer" property must be a Player in this round.`);
-		}
 		this.#deck = deck;
 		this.#players = players;
 		this.#roundNumber = integerRoundNumber;
-		this.#dealer = dealer;
 		this.#gameOver = null;
 		this.#error = null;
 	}
@@ -48,10 +40,6 @@ export default class Round {
 
 	get roundNumber() {
 		return this.#roundNumber;
-	}
-
-	get dealer () {
-		return this.#dealer;
 	}
 
 	get winners () {
