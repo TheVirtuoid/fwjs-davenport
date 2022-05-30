@@ -1,5 +1,5 @@
-import Player from "../../../src/Player/Player.js";
-import Round from "../../../src/Round/Round.js";
+import Player from "../../../src/classes/Player/Player.js";
+import Round from "../../../src/classes/Round/Round.js";
 import Deck from "@virtuoid/deck";
 
 describe('getPlayer', () => {

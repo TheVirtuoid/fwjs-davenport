@@ -1,5 +1,5 @@
-import Player from "../../../src/Player/Player.js";
-import Game from "../../../src/Game/Game.js";
+import Player from "../../../src/classes/Player/Player.js";
+import Game from "../../../src/classes/Game/Game.js";
 import {StandardCard, StandardCardRanks, StandardCardSuits} from "@virtuoid/standard-card";
 // import "regenerator-runtime";
 

@@ -1,4 +1,4 @@
-import Player from "../../../src/Player/Player.js";
+import Player from "../../../src/classes/Player/Player.js";
 
 import Deck from "@virtuoid/deck";
 
