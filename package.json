@@ -34,6 +34,7 @@
   "dependencies": {
     "@virtuoid/deck": "^1.2.0",
     "@virtuoid/standard-card": "^1.0.0",
+    "phaser": "^3.55.2",
     "uuid": "^8.3.2"
   },
   "type": "module"
