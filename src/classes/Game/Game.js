@@ -112,7 +112,7 @@ export default class Game {
 			await round.play(round);
 			this.#gameOver = round.gameOver;
 			this.#error = round.error;
-			this.#winner = this.#gameOver && this.#error ? round.winners[0] : null;
+			this.#winner = this.#gameOver && !this.#error ? round.winners[0] : null;
 		}
 	}
 

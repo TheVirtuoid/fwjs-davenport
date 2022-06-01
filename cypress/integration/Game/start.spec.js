@@ -21,7 +21,7 @@ beforeEach(() => {
 	game.initialize({ dealer });
 });
 
-describe('start the rounds!', () => {
+describe('Game: start the rounds!', () => {
 	it('should start the round and play until the end', () => {
 		/* for this one, we'll force cards into the decks of the players
 				 so to control the outcome.
@@ -51,7 +51,7 @@ describe('start the rounds!', () => {
 				.then(() => game.start())
 				.then(() => {
 					expect(game.gameOver).to.be.true;
-					expect(game.winner).to.equal(playerA);
+					expect(game.winner).to.equal(playerB);
 					expect(game.error).to.be.null;
 				});
 	});
