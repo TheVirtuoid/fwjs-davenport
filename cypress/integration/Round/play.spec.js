@@ -25,7 +25,6 @@ describe('play a round', () => {
 		cy.wrap(round)
 				.then(round.play.bind(round))
 				.then((round) => {
-					console.log(round);
 					expect(round.gameOver).to.be.false;
 					expect(round.error).to.be.null;
 					expect(round.winners instanceof Array).to.be.true;
@@ -103,19 +102,18 @@ describe('play a round', () => {
 		// King of Spades - ks), the discard deck (4 cards in size) will then be shuffled and made into the
 		// regular deck. The last two players draw from that deck, leaving the regular deck with 2 cards
 		//
-		const pickedUpCard = new StandardCard({ suit: StandardCardSuits.SPADE, rank: StandardCardRanks.KING, value: valueMapping[StandardCardRanks.KING]});
+		const pickedUpCard = new StandardCard({ suit: StandardCardSuits.SPADE, rank: StandardCardRanks.KING, value: valueMapping.get(StandardCardRanks.KING)});
 		cy.wrap(round)
 				.then(round.play.bind(round))
 				.then((round) => {
 					expect(round.gameOver).to.be.false;
-					console.log(round.winners);
-					console.log(playerA.deck.getCards());
-					console.log(playerB.deck.getCards());
-					console.log(playerC.deck.getCards());
-					console.log(playerD.deck.getCards());
 					expect(playerC.deck.findCard(pickedUpCard)).to.not.equal(-1);
 					expect(round.deck.cardCount).to.equal(2);
 				});
 	});
+	function printCards(cards) {
+		const output = cards.map((card) => card.toString());
+		return output.join(',');
+	}
 });
 

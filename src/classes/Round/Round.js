@@ -124,17 +124,24 @@ export default class Round {
 	}
 
 	#replaceCards () {
-		const checkWinner = this.winners.length === 1;
-		this.#players.forEach((player) => {
-			if (!checkWinner || checkWinner && player !== this.#winners[0]) {
-				if (this.#deck.cardCount === 0) {
-					while(this.#discardDeck.cardCount > 0) {
-						this.#discardDeck.deal(this.#deck);
-					}
-					this.#deck.shuffle();
-				}
-				this.#deck.deal(player.deck);
+		const haveWinner = this.#winners.length === 1;
+		const order = this.#players.map((player) => player);
+		if (haveWinner) {
+			// we want to start the card replacement with the player next to the winner
+			while(order[0].id!== this.#winners[0].id) {
+				order.push(order.shift());
 			}
+			// then remove the winner from the list.
+			order.shift();
+		}
+		order.forEach((player) => {
+			if (this.#deck.cardCount === 0) {
+				while(this.#discardDeck.cardCount > 0) {
+					this.#discardDeck.deal(this.#deck);
+				}
+				this.#deck.shuffle();
+			}
+			this.#deck.deal(player.deck);
 		});
 		return Promise.resolve(this);
 	}
