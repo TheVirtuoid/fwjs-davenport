@@ -35,4 +35,31 @@ describe('lockedCard', () => {
 			expect(err.name).to.equal('TypeError');
 		}
 	});
+	it('should remove the locked card', () => {
+		const player = new Player({ human: false });
+		const card = new StandardCard({ suit: StandardCardSuits.CLUB, rank: StandardCardRanks.ACE, value: 1});
+		player.deck.add(new StandardCard({ suit: StandardCardSuits.CLUB, rank: StandardCardRanks.ACE, value: 1}));
+		player.getLockedCard()
+				.then(player.removeLockedCard.bind(player))
+				.then((oldLockedCard) => {
+					expect(player.lockedCard).to.be.null;
+					expect(oldLockedCard.is(card)).to.be.true;
+				})
+				.catch((err) => {
+					expect(true).to.be.false;
+				});
+	});
+	it('should return null if there is no locked card to remove', () => {
+		const player = new Player({ human: false });
+		const card = new StandardCard({ suit: StandardCardSuits.CLUB, rank: StandardCardRanks.ACE, value: 1});
+		player.deck.add(new StandardCard({ suit: StandardCardSuits.CLUB, rank: StandardCardRanks.ACE, value: 1}));
+		player.removeLockedCard()
+				.then((oldLockedCard) => {
+					expect(oldLockedCard).to.be.null;
+				})
+				.catch((err) => {
+					expect(true).to.be.false;
+				});
+	});
+
 });

@@ -9,7 +9,9 @@ describe('getPlayer', () => {
 		round = new Round({
 			roundNumber: 1,
 			players,
-			deck: new Deck()});
+			deck: new Deck(),
+			discardDeck: new Deck()
+		});
 	});
 	it('should retrieve a player based upon id', () => {
 		const player = round.getPlayer({ id: 'a' });

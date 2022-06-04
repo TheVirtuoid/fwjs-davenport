@@ -7,16 +7,15 @@ const players = [ new Player({ id: 'a' }), new Player({ id: 'b' }) ];
 const deck = new Deck();
 const discardDeck = new Deck();
 
-
-describe('deck', () => {
-	it('should be able to read the deck', () => {
+describe('discardDeck', () => {
+	it('should be able to read the discardDeck', () => {
 		const round = new Round({ roundNumber, players, deck, discardDeck });
-		expect(round.deck instanceof Deck).to.be.true;
+		expect(round.discardDeck instanceof Deck).to.be.true;
 	});
-	it('should not be able to change deck', () => {
+	it('should not be able to change discardDeck', () => {
 		const round = new Round({ roundNumber, players, deck, discardDeck });
 		try {
-			round.deck = 'bad';
+			round.discardDeck = 'bad';
 			expect(true).to.be.false;
 		} catch (err) {
 			expect(err.name).to.equal('TypeError');

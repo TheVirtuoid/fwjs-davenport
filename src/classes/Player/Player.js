@@ -40,4 +40,10 @@ export default class Player {
 			return Promise.reject(new Error('timeout waiting for player to lock card.'));
 		}
 	}
+
+	removeLockedCard() {
+		const card = this.#lockedCard;
+		this.#lockedCard = null;
+		return Promise.resolve(card);
+	}
 }

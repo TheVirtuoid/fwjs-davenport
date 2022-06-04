@@ -1,7 +1,6 @@
 import Player from "../../../src/classes/Player/Player.js";
 import Game from "../../../src/classes/Game/Game.js";
 import {StandardCard, StandardCardRanks, StandardCardSuits} from "@virtuoid/standard-card";
-// import "regenerator-runtime";
 
 let game;
 let playerA;
@@ -21,18 +20,18 @@ beforeEach(() => {
 	game.initialize({ dealer });
 });
 
-describe('Game: start the rounds!', () => {
-	xit('should start the round and play until the end', () => {
+describe('play a single round', () => {
+	xit('should play a single round', () => {
 		/* for this one, we'll force cards into the decks of the players
-				 so to control the outcome.
+			 so to control the outcome.
 
-				 playerA = ac, 2c
-				 playerB = kc, qc
+			 playerA = ac, 2c
+			 playerB = kc, qc
 
-				 We will also remove all the cards from the game deck and add in
-				 two more. That way, two rounds will be played, with PlayerA having the '3c'
-				 and '4c' cards, while PlayerB will be the winner with no cards
-		 */
+			 We will also remove all the cards from the game deck and add in
+			 two more. That way, two rounds will be played, with PlayerA having the '3c'
+			 and '4c' cards, while PlayerB will be the winner with no cards
+	 */
 		for(let i = 0; i < cardsPerPlayer; i++) {
 			playerA.deck.remove();
 			playerB.deck.remove();
@@ -48,27 +47,12 @@ describe('Game: start the rounds!', () => {
 		game.deck.add(new StandardCard({ suit: StandardCardSuits.CLUB, rank: StandardCardRanks.FOUR, value: 4 }));
 		//
 		cy.wrap(null)
-				.then(() => game.start())
+				.then(() => game.playNextRound())
 				.then(() => {
-					expect(game.gameOver).to.be.true;
+					expect(game.gameOver).to.be.false;
 					expect(game.winner).to.equal(playerB);
 					expect(game.error).to.be.null;
 				});
 	});
-	xit('should start the round and stop when a player drops out', () => {
-		playerA = new Player({ id: 'a' });
-		playerB = new Player({ id: 'b', human: true });
-		players = [ playerA, playerB ];
-		dealer = playerA;
-		game = new Game({ players });
-		game.initialize({ dealer });
-		cy.wrap(null)
-				.then( () => game.start())
-				.then( () => {
-					expect(game.gameOver).to.be.true;
-					expect(game.winner).to.be.null;
-					expect(game.error.exception.name).to.equal('Error');
-					expect(game.error.player).to.equal(playerB);
-				})
-	});
-})
+	xit('should reject the round because there was no card lock', () => {});
+});

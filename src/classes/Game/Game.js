@@ -30,6 +30,7 @@ export default class Game {
 	#error;
 	#dealer;
 	#winner;
+	#discardDeck;
 
 	constructor(gameArguments = {}) {
 		const { id = uuidV4(), players = [] } = gameArguments;
@@ -47,6 +48,7 @@ export default class Game {
 			err: null,
 			player: null
 		}
+		this.#discardDeck = new Deck();
 	}
 
 	get id() {
@@ -104,9 +106,9 @@ export default class Game {
 		while (!this.#gameOver && !this.#error?.err) {
 			const round = new Round({
 				roundNumber: this.#roundNumber,
-				dealer: this.#dealer,
 				players: this.#players,
-				deck: this.#deck
+				deck: this.#deck,
+				discardDeck: this.#discardDeck
 			});
 			this.#rounds.push(round);
 			await round.play(round);

@@ -8,9 +8,13 @@ export default class Round {
 	#winners;
 	#gameOver;
 	#error;
+	#discardDeck;
 
 	constructor(roundArguments = {}) {
-		const { deck, players, roundNumber } = roundArguments;
+		const { deck, players, roundNumber, discardDeck } = roundArguments;
+		if (!(discardDeck instanceof Deck)) {
+			throw new TypeError(`"discardDeck" property must be an instance of the Deck class.`);
+		}
 		if (!(deck instanceof Deck)) {
 			throw new TypeError(`"deck" property must be an instance of the Deck class.`);
 		}
@@ -28,6 +32,7 @@ export default class Round {
 			throw new RangeError(`"roundNumber" must be a positive number.`);
 		}
 		this.#deck = deck;
+		this.#discardDeck = discardDeck;
 		this.#players = players;
 		this.#roundNumber = integerRoundNumber;
 		this.#gameOver = false;
@@ -37,6 +42,10 @@ export default class Round {
 
 	get deck() {
 		return this.#deck;
+	}
+
+	get discardDeck() {
+		return this.#discardDeck;
 	}
 
 	get roundNumber() {
@@ -100,10 +109,30 @@ export default class Round {
 		return Promise.resolve(this);
 	}
 
+	#moveLockedCardsToDiscardDeck() {
+		const promises = [];
+		this.#players.forEach((player) => {
+			promises.push(new Promise((resolve, reject) => {
+				player.removeLockedCard()
+						.then((card) => {
+							this.#discardDeck.add(card);
+							resolve(true);
+						});
+			}));
+		});
+		return Promise.all(promises);
+	}
+
 	#replaceCards () {
 		const checkWinner = this.winners.length === 1;
 		this.#players.forEach((player) => {
 			if (!checkWinner || checkWinner && player !== this.#winners[0]) {
+				if (this.#deck.cardCount === 0) {
+					while(this.#discardDeck.cardCount > 0) {
+						this.#discardDeck.deal(this.#deck);
+					}
+					this.#deck.shuffle();
+				}
 				this.#deck.deal(player.deck);
 			}
 		});
@@ -132,6 +161,7 @@ export default class Round {
 		return new Promise((resolve, reject) => {
 			this.#lockCards()
 					.then(this.#getWinners.bind(this))
+					.then(this.#moveLockedCardsToDiscardDeck.bind(this))
 					.then(this.#replaceCards.bind(this))
 					.then(this.#checkForGameOver.bind(this))
 					.then(resolve)
