@@ -31,6 +31,7 @@ export default class Game {
 	#dealer;
 	#winner;
 	#discardDeck;
+	#callbacks;
 
 	constructor(gameArguments = {}) {
 		const { id = uuidV4(), players = [] } = gameArguments;
@@ -76,12 +77,15 @@ export default class Game {
 	}
 
 	initialize(initializeArguments = {}) {
-		const { dealer } = initializeArguments;
+		const { dealer, callbacks = {} } = initializeArguments;
 		if (!(dealer instanceof Player)) {
 			throw new TypeError(`"dealer" argument is not of a type Player.`);
 		}
 		if (!(this.#players.some((player) => player === dealer))) {
 			throw new RangeError(`"dealer" argument must be a player actually in the game.`);
+		}
+		if (!Object.getOwnPropertyNames(callbacks).every((key) => typeof(callbacks[key]) === 'function')) {
+			throw new TypeError(`"callbacks" key/value list must contain all functions.`);
 		}
 		const cards = [];
 		StandardCardSuits.LIST.forEach((suit) => {
@@ -90,6 +94,7 @@ export default class Game {
 			});
 		});
 		this.#dealer = dealer;
+		this.#callbacks = callbacks;
 		this.#deck = new Deck({ cards });
 		this.#deck.shuffle();
 		let nextPlayer = this.#getNextPlayerForDeal(dealer);
@@ -108,7 +113,8 @@ export default class Game {
 				roundNumber: this.#roundNumber,
 				players: this.#players,
 				deck: this.#deck,
-				discardDeck: this.#discardDeck
+				discardDeck: this.#discardDeck,
+				callbacks: this.#callbacks
 			});
 			this.#rounds.push(round);
 			await round.play(round);

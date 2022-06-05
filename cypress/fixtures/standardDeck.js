@@ -54,7 +54,7 @@ const dealCards = (deck, round, players) => {
 //				player3: '3c', '7c', 'jc', '2d', '6d'
 //
 
-const initializeTest = (playerIds) => {
+const initializeTest = (playerIds, callbacks = {}) => {
 	const deck = new Deck({ cards: copyDeck(standardCardDeck)});
 	const discardDeck = new Deck();
 	const players = playerIds.map((args) => {
@@ -62,7 +62,7 @@ const initializeTest = (playerIds) => {
 		return new Player({ id, human });
 	});
 	const roundNumber = 1;
-	const round = new Round({ roundNumber, players, deck, discardDeck });
+	const round = new Round({ roundNumber, players, deck, discardDeck, callbacks });
 	round.testing = {
 		makePlayerHuman: false,
 		getTieGame: false

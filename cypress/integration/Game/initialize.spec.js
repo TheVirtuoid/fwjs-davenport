@@ -63,4 +63,20 @@ describe('initialize', () => {
 		expect(playerB.deck.cardCount).to.equal(cardsPerPlayer);
 		expect(game.deck.cardCount).to.equal(copyDeck(standardCardDeck).length - cardsPerPlayer * numPlayers);
 	});
+	it('should throw exception if callbacks argument not a key/value collection', () => {
+		try {
+			game.initialize({ dealer, callbacks: 'bad' });
+			expect(true).to.be.false;
+		} catch(err) {
+			expect(err.name).to.equal('TypeError');
+		}
+	});
+	it('should throw exception if callbacks argument not a key/value collection of functions', () => {
+		try {
+			game.initialize({ dealer, callbacks: { a: 'bad', b: 'bad' } });
+			expect(true).to.be.false;
+		} catch(err) {
+			expect(err.name).to.equal('TypeError');
+		}
+	});
 });

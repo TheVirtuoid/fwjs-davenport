@@ -111,9 +111,66 @@ describe('play a round', () => {
 					expect(round.deck.cardCount).to.equal(2);
 				});
 	});
-	function printCards(cards) {
-		const output = cards.map((card) => card.toString());
-		return output.join(',');
-	}
+	it('should call all the callback functions correctly and in order', () => {
+		let count = 0;
+		const roundStart = { in: 1, out: 0 };
+		const beforeLockedCards = { in: 2, out: 0 };
+		const afterLockedCards = { in: 3, out: 0 };
+		const beforeDetermineWinner = { in: 4, out: 0 };
+		const afterDetermineWinner = { in: 5, out: 0 };
+		const beforeReplaceCards = { in: 6, out: 0 };
+		const afterReplaceCards = { in: 7, out: 0 };
+		const roundEnd = { in: 8, out: 0 };
+		const callbacks = {
+			roundStart: () => {
+				count++;
+				roundStart.out = count;
+			},
+			beforeLockedCards: () => {
+				count++;
+				beforeLockedCards.out = count;
+			},
+			afterLockedCards: () => {
+				count++;
+				afterLockedCards.out = count;
+			},
+			beforeDetermineWinner: () => {
+				count++;
+				beforeDetermineWinner.out = count;
+			},
+			afterDetermineWinner: () => {
+				count++;
+				afterDetermineWinner.out = count;
+			},
+			beforeReplaceCards: () => {
+				count++;
+				beforeReplaceCards.out = count;
+			},
+			afterReplaceCards: () => {
+				count++;
+				afterReplaceCards.out = count;
+			},
+			roundEnd: () => {
+				count++;
+				roundEnd.out = count;
+			}
+		};
+		({ deck, players, roundNumber, round, discardDeck } = initializeTest([
+			{ id: 'a', human: false },
+			{ id: 'b', human: false },
+		], callbacks));
+		cy.wrap(round)
+				.then(round.play.bind(round))
+				.then((round) => {
+					expect(roundStart.out).to.equal(roundStart.in);
+					expect(beforeLockedCards.out).to.equal(beforeLockedCards.in);
+					expect(afterLockedCards.out).to.equal(afterLockedCards.in);
+					expect(beforeDetermineWinner.out).to.equal(beforeDetermineWinner.in);
+					expect(afterDetermineWinner.out).to.equal(afterDetermineWinner.in);
+					expect(beforeReplaceCards.out).to.equal(beforeReplaceCards.in);
+					expect(afterReplaceCards.out).to.equal(afterReplaceCards.in);
+					expect(roundEnd.out).to.equal(roundEnd.in);
+				});
+	})
 });
 

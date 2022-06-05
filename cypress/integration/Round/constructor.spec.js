@@ -32,6 +32,16 @@ const players = [ playerA, playerB ];
 const roundNumber = 1;
 const deck = new Deck();
 const discardDeck = new Deck();
+const callbacks = {
+	roundStart: () => {},
+	beforeLockedCards: () => {},
+	afterLockedCards: () => {},
+	beforeDetermineWinner: () => {},
+	afterDetermineWinner: () => {},
+	beforeReplaceCards: () => {},
+	afterReplaceCards: () => {},
+	roundEnd: () => {}
+}
 
 
 describe('round constructor', () => {
@@ -115,6 +125,18 @@ describe('round constructor', () => {
 		try {
 			new Round({ roundNumber, players, deck, discardDeck: 'bad' });
 			expect(true).to.be.false;
+		} catch(err) {
+			expect(err.name).to.equal('TypeError');
+		}
+	});
+	it('if callbacks are specified, they should all be functions', () => {
+		const round = new Round({ roundNumber, players, deck, discardDeck, callbacks });
+		expect(true).to.be.true;
+	});
+	it('if callbacks are specified, should throw exception if at least one is not a function', () => {
+		try {
+			new Round({ roundNumber, players, deck, discardDeck, callbacks: { a: 'bad' } });
+			expect(false).to.be.true;
 		} catch(err) {
 			expect(err.name).to.equal('TypeError');
 		}
