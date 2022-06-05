@@ -22,7 +22,7 @@ beforeEach(() => {
 });
 
 describe('Game: start the rounds!', () => {
-	xit('should start the round and play until the end', () => {
+	it('should start the round and play until the end', () => {
 		/* for this one, we'll force cards into the decks of the players
 				 so to control the outcome.
 
@@ -55,7 +55,7 @@ describe('Game: start the rounds!', () => {
 					expect(game.error).to.be.null;
 				});
 	});
-	xit('should start the round and stop when a player drops out', () => {
+	it('should start the round and stop when a player drops out', () => {
 		playerA = new Player({ id: 'a' });
 		playerB = new Player({ id: 'b', human: true });
 		players = [ playerA, playerB ];
