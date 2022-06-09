@@ -1,5 +1,8 @@
+import styles from "../css/fwjs-davenport.pcss";
+
 import Game from "../../classes/Game/Game.js";
 import Player from "../../classes/Player/Player.js";
+import DavenportCard from "./DavenportCard.js";
 
 const players = [];
 players.push(new Player({ id: 'Human', human: false }));
@@ -45,9 +48,13 @@ game.initialize({ dealer, callbacks });
 const ul = document.getElementById('players');
 players.forEach((player) => {
 	const li = document.createElement('li');
-	let textContent = `${player.id}: `;
-	const cards = player.deck.getCards().map((card) => card.toString());
-	li.textContent = `${player.id}: ${cards.join(',')}`;
+	const span = document.createElement('span');
+	span.textContent = `${player.id}: `;
+	li.appendChild(span);
+	player.deck.getCards().forEach((card) => {
+		const davenportCard = new DavenportCard({ standardCard: card });
+		li.appendChild(davenportCard.dom);
+	});
 	ul.appendChild(li);
 });
 

@@ -6,7 +6,7 @@ describe('human property', () => {
 		const player = new Player();
 		expect(typeof(player.human)).to.equal('boolean');
 	});
-	if('shold create the default value of false', () => {
+	it('should create the default value of false', () => {
 		const player = new Player();
 		expect(player.human).to.be.false;
 	});
