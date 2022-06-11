@@ -46,7 +46,15 @@ const game = new Game({ players });
 game.initialize({ dealer, callbacks });
 
 const ul = document.getElementById('players');
-players.forEach((player) => {
+players.forEach((player, index) => {
+	const hand = document.querySelector(`.player${index}`);
+	const lockedCard = document.querySelector(`.player${index}-locked`);
+	player.deck.getCards().forEach((card) => {
+		const davenportCard = new DavenportCard({ standardCard: card });
+		hand.appendChild(davenportCard.dom);
+	});
+
+/*
 	const li = document.createElement('li');
 	const span = document.createElement('span');
 	span.textContent = `${player.id}: `;
@@ -56,12 +64,16 @@ players.forEach((player) => {
 		li.appendChild(davenportCard.dom);
 	});
 	ul.appendChild(li);
+*/
 });
 
 const results = document.getElementById('results');
 const addToResults = (text) => {
 	results.textContent = `${results.textContent}\n${text}`;
 };
+
+import imgUrl from './../img/cards/sa.svg';
+document.getElementById('card-img').src = imgUrl;
 
 game.start()
 .then(() => {

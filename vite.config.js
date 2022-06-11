@@ -10,7 +10,8 @@ export default ({ command, mode }) => {
 		base: "/",
 		publicDir: "public/",
 		build: {
-			outDir: "./../dist",
+			assetsInlineLimit: 5000,
+			outDir: "./../../dist",
 			emptyOutDir: true,
 			rollupOptions: {
 				input: {
