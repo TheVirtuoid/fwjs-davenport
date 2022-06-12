@@ -9,7 +9,9 @@ describe('numPlayers', () => {
 		round = new Round({
 			roundNumber: 1,
 			players,
-			deck: new Deck()});
+			deck: new Deck(),
+			discardDeck: new Deck()
+		});
 	});
 	it('should return the number of players', () => {
 		expect(round.numPlayers).to.equal(2);

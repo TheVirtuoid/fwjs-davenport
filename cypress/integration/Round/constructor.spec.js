@@ -31,10 +31,22 @@ const playerB = new Player({ id: 'b' });
 const players = [ playerA, playerB ];
 const roundNumber = 1;
 const deck = new Deck();
+const discardDeck = new Deck();
+const callbacks = {
+	roundStart: () => {},
+	beforeLockedCards: () => {},
+	afterLockedCards: () => {},
+	beforeDetermineWinner: () => {},
+	afterDetermineWinner: () => {},
+	beforeReplaceCards: () => {},
+	afterReplaceCards: () => {},
+	roundEnd: () => {}
+}
+
 
 describe('round constructor', () => {
 	it('should create a round instance', () => {
-		const round = new Round({ roundNumber, players, deck });
+		const round = new Round({ roundNumber, players, deck, discardDeck });
 		expect(round instanceof Round).to.be.true;
 	});
 	it('should throw exception if roundNumber missing', () => {
@@ -47,7 +59,7 @@ describe('round constructor', () => {
 	});
 	it('should throw exception if players missing', () => {
 		try {
-			new Round({ roundNumber, deck });
+			new Round({ roundNumber, deck, discardDeck });
 			expect(true).to.be.false;
 		} catch(err) {
 			expect(err.name).to.equal('TypeError');
@@ -55,7 +67,15 @@ describe('round constructor', () => {
 	});
 	it('should throw exception if deck missing', () => {
 		try {
-			new Round({ players, roundNumber });
+			new Round({ players, roundNumber, discardDeck });
+			expect(true).to.be.false;
+		} catch(err) {
+			expect(err.name).to.equal('TypeError');
+		}
+	});
+	it('should throw exception if discardDeck missing', () => {
+		try {
+			new Round({ players, roundNumber, deck });
 			expect(true).to.be.false;
 		} catch(err) {
 			expect(err.name).to.equal('TypeError');
@@ -63,7 +83,7 @@ describe('round constructor', () => {
 	});
 	it('should throw exception if roundNumber not numeric', () => {
 		try {
-			new Round({ players, deck, roundNumber: 'a' });
+			new Round({ players, deck, roundNumber: 'a', discardDeck });
 			expect(true).to.be.false;
 		} catch(err) {
 			expect(err.name).to.equal('TypeError');
@@ -71,7 +91,7 @@ describe('round constructor', () => {
 	});
 	it('should throw exception if roundNumber <= 0', () => {
 		try {
-			new Round({ players, deck, roundNumber: -1 });
+			new Round({ players, deck, roundNumber: -1, discardDeck });
 			expect(true).to.be.false;
 		} catch(err) {
 			expect(err.name).to.equal('RangeError');
@@ -79,7 +99,7 @@ describe('round constructor', () => {
 	});
 	it('should throw exception if players is not an array', () => {
 		try {
-			new Round({ roundNumber, players: 'a', deck });
+			new Round({ roundNumber, players: 'a', deck, discardDeck });
 			expect(true).to.be.false;
 		} catch(err) {
 			expect(err.name).to.equal('TypeError');
@@ -87,7 +107,7 @@ describe('round constructor', () => {
 	});
 	it('should throw exception if players is not an array of Player', () => {
 		try {
-			new Round({ roundNumber, players: [1, 2], deck });
+			new Round({ roundNumber, players: [1, 2], deck, discardDeck });
 			expect(true).to.be.false;
 		} catch(err) {
 			expect(err.name).to.equal('TypeError');
@@ -95,10 +115,31 @@ describe('round constructor', () => {
 	});
 	it('should throw exception if deck is not instanceof Deck', () => {
 		try {
-			new Round({ roundNumber, players, deck: 'a' });
+			new Round({ roundNumber, players, deck: 'a', discardDeck });
 			expect(true).to.be.false;
 		} catch(err) {
 			expect(err.name).to.equal('TypeError');
 		}
 	});
+	it('should throw exception if discardDeck is not instanceof Deck', () => {
+		try {
+			new Round({ roundNumber, players, deck, discardDeck: 'bad' });
+			expect(true).to.be.false;
+		} catch(err) {
+			expect(err.name).to.equal('TypeError');
+		}
+	});
+	it('if callbacks are specified, they should all be functions', () => {
+		const round = new Round({ roundNumber, players, deck, discardDeck, callbacks });
+		expect(true).to.be.true;
+	});
+	it('if callbacks are specified, should throw exception if at least one is not a function', () => {
+		try {
+			new Round({ roundNumber, players, deck, discardDeck, callbacks: { a: 'bad' } });
+			expect(false).to.be.true;
+		} catch(err) {
+			expect(err.name).to.equal('TypeError');
+		}
+	});
+
 });

@@ -33,12 +33,13 @@ const copyDeck = (cards) => {
 	});
 };
 
-const dealCards = (deck, round) => {
-	const player0 = round.getPlayer({ id: 'a' });
-	const player1 = round.getPlayer({ id: 'b' });
+const dealCards = (deck, round, players) => {
+	// dealer is the first player, so move them to the back of the line;
+	players.push(players.shift());
 	for(let i = 0; i < 5; i++) {
-		deck.deal(player1.deck);
-		deck.deal(player0.deck);
+		players.forEach((player) => {
+			deck.deal(player.deck);
+		})
 	}
 }
 
@@ -53,20 +54,21 @@ const dealCards = (deck, round) => {
 //				player3: '3c', '7c', 'jc', '2d', '6d'
 //
 
-const initializeTest = (playerIds) => {
+const initializeTest = (playerIds, callbacks = {}) => {
 	const deck = new Deck({ cards: copyDeck(standardCardDeck)});
+	const discardDeck = new Deck();
 	const players = playerIds.map((args) => {
 		const { id, human = false } = args;
 		return new Player({ id, human });
 	});
 	const roundNumber = 1;
-	const round = new Round({ roundNumber, players, deck});
+	const round = new Round({ roundNumber, players, deck, discardDeck, callbacks });
 	round.testing = {
 		makePlayerHuman: false,
 		getTieGame: false
 	};
-	dealCards(deck, round);
-	return { deck, players, roundNumber, round };
+	dealCards(deck, round, [...players.values()]);
+	return { deck, players, roundNumber, round, discardDeck };
 };
 
 export { standardCardDeck, standardCardDeckCopy, valueMapping, copyDeck, dealCards, initializeTest };

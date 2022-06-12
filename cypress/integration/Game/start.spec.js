@@ -53,6 +53,8 @@ describe('Game: start the rounds!', () => {
 					expect(game.gameOver).to.be.true;
 					expect(game.winner).to.equal(playerB);
 					expect(game.error).to.be.null;
+					expect(game.rounds.length).to.equal(2);
+					expect(game.rounds[1].roundNumber).to.equal(2);
 				});
 	});
 	it('should start the round and stop when a player drops out', () => {

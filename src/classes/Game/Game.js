@@ -30,6 +30,8 @@ export default class Game {
 	#error;
 	#dealer;
 	#winner;
+	#discardDeck;
+	#callbacks;
 
 	constructor(gameArguments = {}) {
 		const { id = uuidV4(), players = [] } = gameArguments;
@@ -47,6 +49,7 @@ export default class Game {
 			err: null,
 			player: null
 		}
+		this.#discardDeck = new Deck();
 	}
 
 	get id() {
@@ -73,13 +76,20 @@ export default class Game {
 		return this.#winner;
 	}
 
+	get rounds() {
+		return this.#rounds;
+	}
+
 	initialize(initializeArguments = {}) {
-		const { dealer } = initializeArguments;
+		const { dealer, callbacks = {} } = initializeArguments;
 		if (!(dealer instanceof Player)) {
 			throw new TypeError(`"dealer" argument is not of a type Player.`);
 		}
 		if (!(this.#players.some((player) => player === dealer))) {
 			throw new RangeError(`"dealer" argument must be a player actually in the game.`);
+		}
+		if (!Object.getOwnPropertyNames(callbacks).every((key) => typeof(callbacks[key]) === 'function')) {
+			throw new TypeError(`"callbacks" key/value list must contain all functions.`);
 		}
 		const cards = [];
 		StandardCardSuits.LIST.forEach((suit) => {
@@ -88,8 +98,10 @@ export default class Game {
 			});
 		});
 		this.#dealer = dealer;
+		this.#callbacks = callbacks;
 		this.#deck = new Deck({ cards });
 		this.#deck.shuffle();
+		this.#rounds = [];
 		let nextPlayer = this.#getNextPlayerForDeal(dealer);
 		for(let cardIndex = 0; cardIndex < this.#cardsPerPlayer; cardIndex++) {
 			for (let playerIndex = 0; playerIndex < this.#players.length; playerIndex++) {
@@ -100,20 +112,26 @@ export default class Game {
 	}
 
 	async start () {
-		this.#roundNumber = 1;
+		this.#roundNumber = 0;
 		while (!this.#gameOver && !this.#error?.err) {
-			const round = new Round({
-				roundNumber: this.#roundNumber,
-				dealer: this.#dealer,
-				players: this.#players,
-				deck: this.#deck
-			});
-			this.#rounds.push(round);
-			await round.play(round);
-			this.#gameOver = round.gameOver;
-			this.#error = round.error;
-			this.#winner = this.#gameOver && !this.#error ? round.winners[0] : null;
+			await(this.playRound());
 		}
+	}
+
+	async playRound() {
+		this.#roundNumber++;
+		const round = new Round({
+			roundNumber: this.#roundNumber,
+			players: this.#players,
+			deck: this.#deck,
+			discardDeck: this.#discardDeck,
+			callbacks: this.#callbacks
+		});
+		this.#rounds.push(round);
+		await round.play(round);
+		this.#gameOver = round.gameOver;
+		this.#error = round.error;
+		this.#winner = this.#gameOver && !this.#error ? round.winners[0] : null;
 	}
 
 	#getNextPlayerForDeal(previousPlayer) {

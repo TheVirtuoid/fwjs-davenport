@@ -1,0 +1,282 @@
+:root {
+    --card-size-width: 5rem;
+    --card-size-height: 8rem;
+    --cell-size-width: var(--card-size-width);
+    --cell-size-height: var(--card-size-height);
+    --cell-horizontal-offset: -3rem;
+    --cell-vertical-offset: -6rem;
+    --card-font-size: 1.5rem;
+}
+
+textarea {
+    width: 50rem;
+    height: 15rem;
+    font-family: monospace;
+    font-size: 12px;
+}
+
+#pitch {
+    display: grid;
+    grid-template-columns: repeat(8, var(--cell-size-width));
+    grid-template-rows: repeat(8, var(--cell-size-height));
+    column-gap: .5rem;
+    row-gap: .5rem;
+}
+
+#pitch .player0 {
+    grid-column-start: 3;
+    grid-column-end: 7;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    background-color: green;
+    align-self: center;
+}
+
+#pitch .player0-locked {
+    grid-column-start: 3;
+    grid-column-end: 7;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    background-color: orange;
+}
+
+#pitch .player2 {
+    grid-column-start: 3;
+    grid-column-end: 7;
+    grid-row-start: 8;
+    grid-row-end: 9;
+    background-color: purple;
+}
+
+#pitch .player2-locked {
+    grid-column-start: 3;
+    grid-column-end: 7;
+    grid-row-start: 7;
+    grid-row-end: 8;
+    background-color: blue;
+}
+
+#pitch .player1 {
+    grid-column-start: 8;
+    grid-column-end: 9;
+    grid-row-start: 3;
+    grid-row-end: 7;
+    background-color: red;
+}
+
+#pitch .player1-locked {
+    grid-column-start: 7;
+    grid-column-end: 8;
+    grid-row-start: 3;
+    grid-row-end: 7;
+    background-color: pink;
+}
+
+#pitch .player3 {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 3;
+    grid-row-end: 7;
+    background-color: yellow;
+}
+
+#pitch .player3-locked {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 3;
+    grid-row-end: 7;
+    background-color: brown;
+}
+
+#pitch div {
+    border: 1px solid black;
+    display: flex;
+}
+
+#pitch div.row {
+    flex-direction: row;
+}
+
+#pitch div.column {
+    flex-direction: column;
+}
+
+
+#pitch .player0 .card, #pitch .player2 .card {
+    margin-left: var(--cell-horizontal-offset);
+}
+
+#pitch .player0 .card:first-child, #pitch .player2 .card:first-child {
+    margin-left: 0;
+}
+
+#pitch .player1 .card, #pitch .player3 .card {
+    margin-top: var(--cell-vertical-offset);
+}
+
+#pitch .player1 .card:first-child, #pitch .player3 .card:first-child {
+    margin-top: 0;
+}
+
+.card {
+    width: var(--card-size-width);
+    height: var(--card-size-height);
+    min-width: var(--card-size-width);
+    min-height: var(--card-size-height);
+    max-height: var(--card-size-height);
+    max-width: var(--card-size-width);
+    display: inline-block;
+    border: 3px solid black;
+    background-color: white;
+    border-radius: 1rem;
+    padding: .25rem;
+    font-size: var(--card-font-size);
+    font-family: sans-serif;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card.heart, .card.diamond {
+    color: red;
+}
+
+.card.club, .card.spade {
+    color: black;
+}
+
+.card span:first-child {
+    align-self: flex-start;
+}
+
+.card span:last-child {
+    align-self: flex-end;
+}
+
+.card span:nth-child(2) {
+    flex-grow: 2;
+    font-size: 2em;
+}
+
+
+
+
+/*
+.card {
+    width: 110px;
+    height: 155px;
+    display: inline-block;
+    background-image: url('./img/fwjs-davenport-cards.webp');
+    background-repeat: no-repeat;
+}
+
+.card span {
+    display: none;
+    visibility:
+}
+
+.card.d2 { background-position: -9px -5px; }
+.card.c2 { background-position: -9px -183px; }
+.card.h2 { background-position: -9px -361px; }
+.card.s2 { background-position: -9px -538px; }
+
+.card.d3 { background-position: -138px -5px; }
+.card.c3 { background-position: -138px -183px; }
+.card.h3 { background-position: -138px -361px; }
+.card.s3 { background-position: -138px -538px; }
+
+.card.d4 { background-position: -272px -5px; }
+.card.c4 { background-position: -272px -183px; }
+.card.h4 { background-position: -272px -361px; }
+.card.s4 { background-position: -272px -538px; }
+
+.card.d5 { background-position: -401px -5px; }
+.card.c5 { background-position: -401px -183px; }
+.card.h5 { background-position: -401px -361px; }
+.card.s5 { background-position: -401px -538px; }
+
+.card.d6 { background-position: -534px -5px; }
+.card.c6 { background-position: -534px -183px; }
+.card.h6 { background-position: -534px -361px; }
+.card.s6 { background-position: -534px -538px; }
+
+.card.d7 { background-position: -667px -5px; }
+.card.c7 { background-position: -667px -183px; }
+.card.h7 { background-position: -667px -361px; }
+.card.s7 { background-position: -667px -538px; }
+
+.card.d8 { background-position: -801px -5px; }
+.card.c8 { background-position: -801px -183px; }
+.card.h8 { background-position: -801px -361px; }
+.card.s8 { background-position: -801px -538px; }
+
+.card.d9 { background-position: -930px -5px; }
+.card.c9 { background-position: -930px -183px; }
+.card.h9 { background-position: -930px -361px; }
+.card.s9 { background-position: -930px -538px; }
+
+.card.d10 { background-position: -1063px -5px; }
+.card.c10 { background-position: -1063px -183px; }
+.card.h10 { background-position: -1063px -361px; }
+.card.s10 { background-position: -1063px -538px; }
+
+.card.dj { background-position: -1189px -5px; }
+.card.cj { background-position: -1189px -183px; }
+.card.hj { background-position: -1189px -361px; }
+.card.sj { background-position: -1189px -538px; }
+
+.card.dq { background-position: -1318px -5px; }
+.card.cq { background-position: -1318px -183px; }
+.card.hq { background-position: -1318px -361px; }
+.card.sq { background-position: -1318px -538px; }
+
+.card.dk { background-position: -1442px -5px; }
+.card.ck { background-position: -1442px -183px; }
+.card.hk { background-position: -1442px -361px; }
+.card.sk { background-position: -1442px -538px; }
+
+.card.da { background-position: -1568px -5px; }
+.card.ca { background-position: -1568px -183px; }
+.card.ha { background-position: -1568px -361px; }
+.card.sa { background-position: -1568px -538px; }
+
+*/
+
+main nav ul {
+    list-style-type: none;
+}
+
+main nav ul li {
+    display: inline-block;
+    margin-right: 1rem;
+}
+
+main nav ul li button {
+    border-radius: 1rem;
+    border: 1px solid black;
+    color: white;
+    cursor: pointer;
+    background-color: green;
+}
+
+main nav ul li button.inactive {
+    background-color: lightcoral;
+    color: gray;
+    cursor: not-allowed;
+}
+
+#players {
+    list-style-type: none;
+}
+
+#players li {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#players li .card-listing {
+    display: flex;
+    flex-direction: row;
+}

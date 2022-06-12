@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <meta name="Description" content="Fun With JavaScript Davenport Card Game - Presented by TheVirtuoid">
+        <link rel="icon" href="/img/fwjs-davenport.ico">
+        <title>Fun With JavaScript - Davenport Card Game</title>
+    </head>
+    <body>
+        <header>
+            <h1>Fun With JavaScript - Davenport Card Game</h1>
+        </header>
+        <main>
+            <nav>
+                <ul>
+                    <li><button type="button" id="play-round">Start Round</button></li>
+                    <li><button type="button" id="lock-cards" class="inactive">Lock Cards</button></li>
+                    <li><button type="button" id="reveal-cards" class="inactive">Reveal Cards</button></li>
+                    <li><button type="button" id="draw-cards" class="inactive">Draw Cards</button></li>
+                </ul>
+            </nav>
+
+            <section>
+                <ul id="players">
+
+                </ul>
+            </section>
+
+<!--
+            <section id="pitch">
+                <div class="row player0"></div>
+                <div class="row player0-locked"></div>
+                <div class="column player1"></div>
+                <div class="column player1-locked"></div>
+                <div class="row player2"></div>
+                <div class="row player2-locked"></div>
+                <div class="column player3"></div>
+                <div class="column player3-locked"></div>
+            </section>
+-->
+
+            <textarea id="results"></textarea>
+        </main>
+        <footer>
+            <p>&copy; 2022 Michael P. Smith a.k.a. TheVirtuoid. Free to use!</p>
+        </footer>
+        <script src="/js/fwjs-davenport.js" type="module"></script>
+    </body>
+</html>
