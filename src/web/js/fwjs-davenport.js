@@ -12,13 +12,40 @@ players.push(new Player({ id: 'Phineas'}));
 
 const dealer = players[0];
 
+const buttonStartRound = document.getElementById('start-round');
+const buttonLockCards = document.getElementById('lock-cards');
+const buttonRevealCards = document.getElementById('reveal-cards');
+const buttonDrawCards = document.getElementById('draw-cards');
+
 const callbacks = {
 	roundStart: (round) => {
-		addToResults(`\n\nROUND ${round.roundNumber}`);
+		return new Promise((resolve, reject) => {
+			addToResults(`\n\nROUND ${round.roundNumber}`);
+			buttonStartRound.addEventListener('click', () => {
+				buttonStartRound.classList.add('inactive');
+				buttonRevealCards.classList.remove('inactive');
+				resolve(round);
+			}, { once: true });
+		});
+	},
+	beforeLockedCards: (round) => {
+		players.forEach((player) => {
+			updateLockedCards(player);
+		});
+		return new Promise((resolve, reject) => {
+			buttonRevealCards.addEventListener('click', () => {
+				buttonRevealCards.classList.add('inactive');
+				buttonDrawCards.classList.remove('inactive');
+				resolve(round);
+			}, { once: true });
+		});
 	},
 	afterLockedCards: (round) => {
 		const lockedCards = players.map((player) => {
 			return `(${player.id})${player.lockedCard.clone().toString()}`;
+		});
+		players.forEach((player) => {
+			updateLockedCards(player);
 		});
 		addToResults(lockedCards.join(', '));
 	},
@@ -31,19 +58,38 @@ const callbacks = {
 			addToResults(`WHOOPS! We got an error!`);
 		}
 	},
-	roundEnd: (round) => {
-		addToResults('Cards after this round:');
+	beforeReplaceCards: (round) => {
 		players.forEach((player) => {
-			const cards = player.deck.getCards().map((card) => card.toString());
-			addToResults(`   ${player.id}\t${cards.join(', ')}`);
+			updateCards(player);
 		});
-		if (round.gameOver) {
-			addToResults('GAME IS OVER!!!');
-		}
+		return new Promise((resolve, reject) => {
+			buttonDrawCards.addEventListener('click', () => {
+				buttonDrawCards.classList.add('inactive');
+				buttonStartRound.classList.remove('inactive');
+				resolve(round);
+			}, { once: true });
+		});
+	},
+	roundEnd: (round) => {
+		return new Promise((resolve, reject) => {
+			addToResults('Cards after this round:');
+			players.forEach((player) => {
+				const cards = player.deck.getCards().map((card) => card.toString());
+				addToResults(`   ${player.id}\t${cards.join(', ')}`);
+			});
+			if (round.gameOver) {
+				addToResults('GAME IS OVER!!!');
+			}
+			players.forEach((player) => {
+				updateCards(player);
+				clearLockedCards(player);
+			});
+			buttonDrawCards.classList.add('inactive');
+			buttonStartRound.classList.remove('inactive');
+			resolve(round);
+		});
 	}
 }
-const game = new Game({ players });
-game.initialize({ dealer, callbacks });
 
 /*
 const ul = document.getElementById('players');
@@ -79,18 +125,64 @@ const constructPlayer = (player) => {
 
 const updateCards = (player) => {
 	const cardsDom = document.getElementById(`${player.id}-cards`);
-	const cards = player.deck.getCards().map((card) => card.toString());
+	while (cardsDom.firstChild) {
+		cardsDom.removeChild(cardsDom.firstChild);
+	}
 	player.deck.getCards().forEach((card) => {
 		const davenportCard = new DavenportCard({ standardCard: card });
 		cardsDom.appendChild(davenportCard.dom);
 	});
 };
 
+const clearLockedCards = (player) => {
+	const dom = document.getElementById(`${player.id}-locked-card`);
+	while (dom.firstChild) {
+		dom.removeChild(dom.firstChild);
+	}
+}
+
+const updateLockedCards = (player) => {
+	const dom = document.getElementById(`${player.id}-locked-card`);
+	while (dom.firstChild) {
+		dom.removeChild(dom.firstChild);
+	}
+	const davenportCard = player.lockedCard ?
+			new DavenportCard({ standardCard: player.lockedCard }) :
+			new DavenportCard({ standardCard: null });
+	dom.appendChild(davenportCard.dom);
+}
+
+const callbackRoundStart = async () => {};
+const callbackBeforeLockedCards = async () => {};
+const callbackAfterLockedCards = async () => {};
+const callbackBeforeDetermineWinner = async () => {};
+const callbackAfterDetermineWinner = async () => {};
+const callbackBeforeReplaceCards = async () => {};
+const callbackAfterReplaceCards = async () => {};
+const callbackRoundEnd  = async () => {
+	console.log('round end');
+};
+
+/*const callbacks = {
+	roundStart: callbackRoundStart,
+	beforeLockedCards: callbackBeforeLockedCards,
+	afterLockedCards: callbackAfterLockedCards,
+	beforeDetermineWinner: callbackBeforeDetermineWinner,
+	afterDetermineWinner: callbackAfterDetermineWinner,
+	beforeReplaceCards: callbackBeforeReplaceCards,
+	afterReplaceCards: callbackAfterReplaceCards,
+	roundEnd: callbackRoundEnd
+};*/
+
+const game = new Game({ players });
+game.initialize({ dealer, callbacks });
+
 const playerUL = document.getElementById('players');
 players.forEach((player) => {
 	playerUL.appendChild(constructPlayer(player));
 	updateCards(player);
 });
+
 
 game.start()
 .then(() => {
