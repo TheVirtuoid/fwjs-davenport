@@ -1,5 +1,6 @@
 import {initializeTest, valueMapping} from '../../fixtures/standardDeck.js';
 import {StandardCard, StandardCardRanks, StandardCardSuits} from "@virtuoid/standard-card";
+import Round from "../../../src/classes/Round/Round.js";
 
 describe('play a round', () => {
 	let round;
@@ -113,46 +114,62 @@ describe('play a round', () => {
 	});
 	it('should call all the callback functions correctly and in order', () => {
 		let count = 0;
-		const roundStart = { in: 1, out: 0 };
-		const beforeLockedCards = { in: 2, out: 0 };
-		const afterLockedCards = { in: 3, out: 0 };
-		const beforeDetermineWinner = { in: 4, out: 0 };
-		const afterDetermineWinner = { in: 5, out: 0 };
-		const beforeReplaceCards = { in: 6, out: 0 };
-		const afterReplaceCards = { in: 7, out: 0 };
-		const roundEnd = { in: 8, out: 0 };
+		const roundStart = { in: 1, out: 0, round: null };
+		const beforeLockedCards = { in: 2, out: 0, round: null };
+		const afterLockedCards = { in: 3, out: 0, round: null };
+		const beforeDetermineWinner = { in: 4, out: 0, round: null };
+		const afterDetermineWinner = { in: 5, out: 0, round: null };
+		const beforeReplaceCards = { in: 6, out: 0, round: null };
+		const afterReplaceCards = { in: 7, out: 0, round: null };
+		const roundEnd = { in: 8, out: 0, round: null };
 		const callbacks = {
-			roundStart: () => {
+			roundStart: (round) => {
 				count++;
 				roundStart.out = count;
+				roundStart.round = round;
+				return Promise.resolve(round)
 			},
-			beforeLockedCards: () => {
+			beforeLockedCards: (round) => {
 				count++;
 				beforeLockedCards.out = count;
+				beforeLockedCards.round = round;
+				return Promise.resolve(round);
 			},
-			afterLockedCards: () => {
+			afterLockedCards: (round) => {
 				count++;
 				afterLockedCards.out = count;
+				afterLockedCards.round = round;
+				return Promise.resolve(round);
 			},
-			beforeDetermineWinner: () => {
+			beforeDetermineWinner: (round) => {
 				count++;
 				beforeDetermineWinner.out = count;
+				beforeDetermineWinner.round = round;
+				return Promise.resolve(round);
 			},
-			afterDetermineWinner: () => {
+			afterDetermineWinner: (round) => {
 				count++;
 				afterDetermineWinner.out = count;
+				afterDetermineWinner.round = round;
+				return Promise.resolve(round);
 			},
-			beforeReplaceCards: () => {
+			beforeReplaceCards: (round) => {
 				count++;
 				beforeReplaceCards.out = count;
+				beforeReplaceCards.round = round;
+				return Promise.resolve(round);
 			},
-			afterReplaceCards: () => {
+			afterReplaceCards: (round) => {
 				count++;
 				afterReplaceCards.out = count;
+				afterReplaceCards.round = round;
+				return Promise.resolve(round);
 			},
-			roundEnd: () => {
+			roundEnd: (round) => {
 				count++;
 				roundEnd.out = count;
+				roundEnd.round = round;
+				return Promise.resolve(round);
 			}
 		};
 		({ deck, players, roundNumber, round, discardDeck } = initializeTest([
@@ -170,6 +187,15 @@ describe('play a round', () => {
 					expect(beforeReplaceCards.out).to.equal(beforeReplaceCards.in);
 					expect(afterReplaceCards.out).to.equal(afterReplaceCards.in);
 					expect(roundEnd.out).to.equal(roundEnd.in);
+
+					expect(roundStart.round instanceof Round).to.be.true;
+					expect(beforeLockedCards.round instanceof Round).to.be.true;
+					expect(afterLockedCards.round instanceof Round).to.be.true;
+					expect(beforeDetermineWinner.round instanceof Round).to.be.true;
+					expect(afterDetermineWinner.round instanceof Round).to.be.true;
+					expect(beforeReplaceCards.round instanceof Round).to.be.true;
+					expect(afterReplaceCards.round instanceof Round).to.be.true;
+					expect(roundEnd.round instanceof Round).to.be.true;
 				});
 	})
 });

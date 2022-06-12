@@ -86,15 +86,9 @@ export default class Round {
 		return this.#players.find((player) => player.id === id) || null;
 	}
 
-
-	/*
-			const roundStart = { in: 1, out: 0 };
-		const roundEnd = { in: 8, out: 0 };
-
-	 */
-	#lockCards () {
+	async #lockCards () {
 		if (this.#callbacks.beforeLockedCards) {
-			this.#callbacks.beforeLockedCards(this);
+			await this.#callbacks.beforeLockedCards(this);
 		}
 		const promises = [];
 		this.#players.forEach((player) => {
@@ -103,9 +97,9 @@ export default class Round {
 		const round = this;
 		return new Promise((resolve, reject) => {
 			Promise.all(promises)
-					.then(() => {
+					.then(async () => {
 						if (this.#callbacks.afterLockedCards) {
-							this.#callbacks.afterLockedCards(this);
+							await this.#callbacks.afterLockedCards(this);
 						}
 						resolve(round);
 					})
@@ -113,9 +107,9 @@ export default class Round {
 		});
 	}
 
-	#getWinners () {
+	async #getWinners () {
 		if (this.#callbacks.beforeDetermineWinner) {
-			this.#callbacks.beforeDetermineWinner(this);
+			await this.#callbacks.beforeDetermineWinner(this);
 		}
 		let highCardValue = -1;
 		this.#clearWinners()
@@ -129,7 +123,7 @@ export default class Round {
 			}
 		});
 		if (this.#callbacks.afterDetermineWinner) {
-			this.#callbacks.afterDetermineWinner(this);
+			await this.#callbacks.afterDetermineWinner(this);
 		}
 		return Promise.resolve(this);
 	}
@@ -148,9 +142,9 @@ export default class Round {
 		return Promise.all(promises);
 	}
 
-	#replaceCards () {
+	async #replaceCards () {
 		if (this.#callbacks.beforeReplaceCards) {
-			this.#callbacks.beforeReplaceCards(this);
+			await this.#callbacks.beforeReplaceCards(this);
 		}
 		const haveWinner = this.#winners.length === 1;
 		const order = this.#players.map((player) => player);
@@ -172,7 +166,7 @@ export default class Round {
 			this.#deck.deal(player.deck);
 		});
 		if (this.#callbacks.afterReplaceCards) {
-			this.#callbacks.afterReplaceCards(this);
+			await this.#callbacks.afterReplaceCards(this);
 		}
 		return Promise.resolve(this);
 	}
@@ -195,32 +189,31 @@ export default class Round {
 		});
 	}
 
-	play () {
-		return new Promise((resolve, reject) => {
+	async play () {
+		return new Promise(async (resolve, reject) => {
 			if (this.#callbacks.roundStart) {
-				this.#callbacks.roundStart(this);
+				await this.#callbacks.roundStart(this);
 			}
 			this.#lockCards()
 					.then(this.#getWinners.bind(this))
 					.then(this.#moveLockedCardsToDiscardDeck.bind(this))
 					.then(this.#replaceCards.bind(this))
 					.then(this.#checkForGameOver.bind(this))
-					.then((round) => {
+					.then(async (round) => {
 						if (round.#callbacks.roundEnd) {
-							round.#callbacks.roundEnd(round);
+							await round.#callbacks.roundEnd(round);
 						}
 						resolve(round);
 					})
-					.catch((err) => {
+					.catch(async (err) => {
 						this.#gameOver = true;
 						this.#error = { exception: err, player: err.player };
 						this.#winners = [];
 						if (this.#callbacks.roundEnd) {
-							this.#callbacks.roundEnd(this);
+							await this.#callbacks.roundEnd(this);
 						}
 						resolve(this);
 					});
 		});
 	}
-
 }
