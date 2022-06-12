@@ -45,6 +45,7 @@ const callbacks = {
 const game = new Game({ players });
 game.initialize({ dealer, callbacks });
 
+/*
 const ul = document.getElementById('players');
 players.forEach((player, index) => {
 	const hand = document.querySelector(`.player${index}`);
@@ -53,27 +54,43 @@ players.forEach((player, index) => {
 		const davenportCard = new DavenportCard({ standardCard: card });
 		hand.appendChild(davenportCard.dom);
 	});
-
-/*
-	const li = document.createElement('li');
-	const span = document.createElement('span');
-	span.textContent = `${player.id}: `;
-	li.appendChild(span);
-	player.deck.getCards().forEach((card) => {
-		const davenportCard = new DavenportCard({ standardCard: card });
-		li.appendChild(davenportCard.dom);
-	});
-	ul.appendChild(li);
-*/
 });
+*/
 
 const results = document.getElementById('results');
 const addToResults = (text) => {
 	results.textContent = `${results.textContent}\n${text}`;
 };
 
-import imgUrl from './../img/cards/sa.svg';
-document.getElementById('card-img').src = imgUrl;
+const constructPlayer = (player) => {
+	const li = document.createElement('li');
+	let span = document.createElement('span');
+	span.textContent = player.id;
+	li.appendChild(span);
+	span = document.createElement('span');
+	span.classList.add('card-listing');
+	span.id = `${player.id}-cards`;
+	li.appendChild(span);
+	span = document.createElement('span');
+	span.id = `${player.id}-locked-card`;
+	li.appendChild(span);
+	return li;
+};
+
+const updateCards = (player) => {
+	const cardsDom = document.getElementById(`${player.id}-cards`);
+	const cards = player.deck.getCards().map((card) => card.toString());
+	player.deck.getCards().forEach((card) => {
+		const davenportCard = new DavenportCard({ standardCard: card });
+		cardsDom.appendChild(davenportCard.dom);
+	});
+};
+
+const playerUL = document.getElementById('players');
+players.forEach((player) => {
+	playerUL.appendChild(constructPlayer(player));
+	updateCards(player);
+});
 
 game.start()
 .then(() => {

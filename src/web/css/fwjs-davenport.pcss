@@ -1,7 +1,11 @@
 :root {
-    --card-size: 5rem;
-    --cell-size: var(--card-size);
-    --cell-horizontal-offset: -1rem;
+    --card-size-width: 5rem;
+    --card-size-height: 8rem;
+    --cell-size-width: var(--card-size-width);
+    --cell-size-height: var(--card-size-height);
+    --cell-horizontal-offset: -3rem;
+    --cell-vertical-offset: -6rem;
+    --card-font-size: 1.5rem;
 }
 
 textarea {
@@ -11,23 +15,10 @@ textarea {
     font-size: 12px;
 }
 
-.playing-card {
-    background-color: white;
-    font-size: var(--card-size);
-}
-
-.playing-card.heart, .playing-card.diamond {
-    color: red;
-}
-
-.playing-card.club, .playing-card.spade {
-    color: black;
-}
-
 #pitch {
     display: grid;
-    grid-template-columns: repeat(8, var(--cell-size));
-    grid-template-rows: repeat(8, var(--cell-size));
+    grid-template-columns: repeat(8, var(--cell-size-width));
+    grid-template-rows: repeat(8, var(--cell-size-height));
     column-gap: .5rem;
     row-gap: .5rem;
 }
@@ -110,24 +101,68 @@ textarea {
     flex-direction: column;
 }
 
-/*
-#pitch .player0 span, #pitch .player2 span {
+
+#pitch .player0 .card, #pitch .player2 .card {
     margin-left: var(--cell-horizontal-offset);
 }
 
-#pitch .player0 span:first-child, #pitch .player2 span:first-child {
+#pitch .player0 .card:first-child, #pitch .player2 .card:first-child {
     margin-left: 0;
 }
 
-#pitch .player1 span, #pitch .player3 span {
-    margin-top: var(--cell-horizontal-offset);
+#pitch .player1 .card, #pitch .player3 .card {
+    margin-top: var(--cell-vertical-offset);
 }
 
-#pitch .player1 span:first-child, #pitch .player3 span:first-child {
+#pitch .player1 .card:first-child, #pitch .player3 .card:first-child {
     margin-top: 0;
-}*/
+}
+
+.card {
+    width: var(--card-size-width);
+    height: var(--card-size-height);
+    min-width: var(--card-size-width);
+    min-height: var(--card-size-height);
+    max-height: var(--card-size-height);
+    max-width: var(--card-size-width);
+    display: inline-block;
+    border: 3px solid black;
+    background-color: white;
+    border-radius: 1rem;
+    padding: .25rem;
+    font-size: var(--card-font-size);
+    font-family: sans-serif;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card.heart, .card.diamond {
+    color: red;
+}
+
+.card.club, .card.spade {
+    color: black;
+}
+
+.card span:first-child {
+    align-self: flex-start;
+}
+
+.card span:last-child {
+    align-self: flex-end;
+}
+
+.card span:nth-child(2) {
+    flex-grow: 2;
+    font-size: 2em;
+}
 
 
+
+
+/*
 .card {
     width: 110px;
     height: 155px;
@@ -206,4 +241,42 @@ textarea {
 .card.ha { background-position: -1568px -361px; }
 .card.sa { background-position: -1568px -538px; }
 
+*/
 
+main nav ul {
+    list-style-type: none;
+}
+
+main nav ul li {
+    display: inline-block;
+    margin-right: 1rem;
+}
+
+main nav ul li button {
+    border-radius: 1rem;
+    border: 1px solid black;
+    color: white;
+    cursor: pointer;
+    background-color: green;
+}
+
+main nav ul li button.inactive {
+    background-color: lightcoral;
+    color: gray;
+    cursor: not-allowed;
+}
+
+#players {
+    list-style-type: none;
+}
+
+#players li {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#players li .card-listing {
+    display: flex;
+    flex-direction: row;
+}
