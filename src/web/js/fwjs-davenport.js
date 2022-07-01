@@ -152,6 +152,7 @@ const updateLockedCards = (player) => {
 	dom.appendChild(davenportCard.dom);
 }
 
+/*
 const callbackRoundStart = async () => {};
 const callbackBeforeLockedCards = async () => {};
 const callbackAfterLockedCards = async () => {};
@@ -163,7 +164,7 @@ const callbackRoundEnd  = async () => {
 	console.log('round end');
 };
 
-/*const callbacks = {
+const callbacks = {
 	roundStart: callbackRoundStart,
 	beforeLockedCards: callbackBeforeLockedCards,
 	afterLockedCards: callbackAfterLockedCards,
