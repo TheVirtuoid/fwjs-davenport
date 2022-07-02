@@ -4,7 +4,7 @@ const webpackOptions= webpackPreprocessor.defaultOptions;
 module.exports = defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
-      on('file:preprocessor', webpackPreprocessor(webpackOptions));
+      on('file:preprocessor', webpackPreprocessor(webpackOptions))
     },
     supportFile: false
   }
