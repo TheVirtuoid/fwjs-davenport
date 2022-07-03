@@ -108,13 +108,13 @@ const addToResults = (text) => {
 	results.textContent = `${results.textContent}\n${text}`;
 };
 
-const constructPlayer = (player) => {
+const constructPlayer = (player, playerIndex) => {
 	const li = document.createElement('li');
 	let span = document.createElement('span');
-	span.textContent = player.id;
+	//span.textContent = player.id;
 	li.appendChild(span);
 	span = document.createElement('span');
-	span.classList.add('card-listing');
+	span.classList.add('card-listing', Math.floor(playerIndex / 2) === playerIndex / 2 ? 'horizontal' : 'vertical');
 	span.id = `${player.id}-cards`;
 	li.appendChild(span);
 	span = document.createElement('span');
@@ -175,12 +175,14 @@ const callbacks = {
 	roundEnd: callbackRoundEnd
 };*/
 
+
 const game = new Game({ players });
 game.initialize({ dealer, callbacks });
 
+/*
 const playerUL = document.getElementById('players');
-players.forEach((player) => {
-	playerUL.appendChild(constructPlayer(player));
+players.forEach((player, playerIndex) => {
+	playerUL.appendChild(constructPlayer(player, playerIndex));
 	updateCards(player);
 });
 
@@ -189,3 +191,5 @@ game.start()
 .then(() => {
 	console.log('the end');
 })
+*/
+
