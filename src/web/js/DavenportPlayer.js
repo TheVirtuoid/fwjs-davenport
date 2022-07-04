@@ -1,7 +1,13 @@
+import DavenportCard from "./DavenportCard.js";
+import MovingCard from "./MovingCard.js";
+
 export default class DavenportPlayer {
 	#player;
 	#dom;
 	#lockedCardDom;
+	#cardList;
+	#lockedCardDomCard;
+	#movingCard;
 
 	constructor(player) {
 		this.#player = player;
@@ -25,11 +31,18 @@ export default class DavenportPlayer {
 		}
 		dom.appendChild(cardDivs);
 		this.#dom = dom;
+		this.#cardList = cardDivs;
 
 		const lockedCardDom = document.createElement('div');
 		lockedCardDom.classList.add('locked-card');
 		lockedCardDom.insertAdjacentHTML('afterbegin', `<span class="name">${player.id}</span><span class="card outline"></span>`);
 		this.#lockedCardDom = lockedCardDom;
+		this.#lockedCardDomCard = lockedCardDom.querySelector('.card');
+		this.#movingCard = new MovingCard();
+
+		this.#cardList.addEventListener('click', () => {
+			this.playCard(4);
+		});
 	}
 
 	get dom() {
@@ -44,7 +57,32 @@ export default class DavenportPlayer {
 		return this.#lockedCardDom;
 	}
 
-	playCard() {
-		const movingCard =
+	playCard(index) {
+		const playerDeck = this.#player.deck.getCards();
+		const standardCard = playerDeck[index];
+		const davenportCard = new DavenportCard({ standardCard });
+		if (this.#player.human) {
+			this.#movingCard.faceUp();
+		} else {
+			this.#movingCard.faceDown();
+		}
+		const cardToMove = this.#cardList.querySelector(`.card:nth-child(${index+1})`);
+		const cardPosition = cardToMove.getBoundingClientRect();
+		const lockedCardPosition = this.#lockedCardDomCard.getBoundingClientRect();
+		const self = this;
+
+		const movement = {
+			from: [cardPosition.left, cardPosition.top],
+			to: [lockedCardPosition.left, lockedCardPosition.top]
+		}
+		cardToMove.classList.add('hidden');
+		this.#movingCard.move(movement)
+				.then(() => {
+					self.#lockedCardDomCard.classList.remove('outline');
+					if (!self.#player.human) {
+						self.#lockedCardDomCard.classList.add('back');
+					}
+					// self.#lockedCardDomCard.innerHTML = davenportCard.dom.innerHTML;
+				});
 	}
 }

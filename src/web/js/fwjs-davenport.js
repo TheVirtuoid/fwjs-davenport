@@ -5,6 +5,7 @@ import Player from "../../classes/Player/Player.js";
 import DavenportCard from "./DavenportCard.js";
 import DavenportPlayer from "./DavenportPlayer";
 import {StandardCard, StandardCardRanks, StandardCardSuits} from "@virtuoid/standard-card";
+import MovingCard from "./MovingCard.js";
 
 const players = [];
 players.push(new Player({ id: 'You', human: true }));
@@ -221,50 +222,36 @@ game.start()
 })
 */
 
-document.querySelector('#new-game button').addEventListener('click', (event) => {
-	document.getElementById('new-game').classList.add('hidden');
-	document.getElementById('opponent-list').classList.remove('hidden');
-});
-
 const discardDeck = document.querySelector('.battle-field .discard-deck .card').getBoundingClientRect();
 
-const newCard = document.createElement('span');
-newCard.id = 'moving-card';
-newCard.classList.add('card', 'back', 'movable');
-newCard.style.top = `${discardDeck.top}px`;
-newCard.style.left = `${discardDeck.left}px`;
-document.body.appendChild(newCard);
+const movingCard = new MovingCard({
+	timing: { duration: 250, iterations: 1 }
+});
 
-const cardTiming = {
-	duration: 250,
-	iterations: 1
-}
-
-const dealCard = (destination, index = -1) => {
+const dealCard = (davenportPlayer, index = -1) => {
 	return new Promise((resolve, reject) => {
-		const davenportPlayer = davenportPlayers.find((davenportPlayer) => davenportPlayer.player.id === destination);
+		const destination = davenportPlayer.player.id;
 		const deck = cardLists.get(destination);
 		const empty = deck.querySelector('.card.blank');
 		const emptyClientRect = empty.getBoundingClientRect();
-		const newCardAnimation = [
-			{ transform: `translate(0px, 0px)` },
-			{ transform: `translate(${emptyClientRect.left - discardDeck.left}px, ${emptyClientRect.top - discardDeck.top}px) rotateZ(180deg)` }
-		];
-		const animation = newCard.animate(newCardAnimation, cardTiming);
-		animation.addEventListener('finish', () => {
-			empty.classList.remove('blank');
-			if (davenportPlayer.player.human && index !== -1) {
-				const playerDeck = davenportPlayer.player.deck.getCards();
-				const standardCard = playerDeck[index];
-				const davenportCard = new DavenportCard({ standardCard });
-				empty.innerHTML = davenportCard.dom.innerHTML;
-				empty.classList.remove('blank');
-				empty.classList.add(standardCard.suit.name);
-			} else {
-				empty.classList.add('back');
-			}
-			resolve();
-		}, { once: true })
+		const movement = {
+			from: [ discardDeck.left, discardDeck.top ],
+			to: [ emptyClientRect.left, emptyClientRect.top]
+		};
+		movingCard.move(movement)
+				.then(() => {
+					empty.classList.remove('blank');
+					if (davenportPlayer.player.human && index !== -1) {
+						const playerDeck = davenportPlayer.player.deck.getCards();
+						const standardCard = playerDeck[index];
+						const davenportCard = new DavenportCard({ standardCard });
+						empty.innerHTML = davenportCard.dom.innerHTML;
+						empty.classList.add(standardCard.suit.name);
+					} else {
+						empty.classList.add('back');
+					}
+					resolve();
+				});
 	});
 }
 
@@ -272,7 +259,7 @@ let index = 0;
 
 const dealEveryone = async () => {
 	for(let i = 0, l = davenportPlayers.length; i < l; i++) {
-		await dealCard(davenportPlayers[i].player.id, index);
+		await dealCard(davenportPlayers[i], index);
 	}
 	index++;
 }
@@ -284,9 +271,6 @@ const initialDeal = () => {
 			.then(dealEveryone)
 			.then(dealEveryone);
 }
-
-
-
 
 document.getElementById('go').addEventListener('click', () => {
 	initialDeal();
