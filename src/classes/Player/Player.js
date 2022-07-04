@@ -9,14 +9,16 @@ export default class Player {
 	#deck;
 	#lockedCardTimeoutSeconds;
 	#lockedCardPollingMilliseconds = 10;
+	#avatar;
 
 	constructor(playerArguments = {}) {
-		const { id, human = false, lockedCardTimeoutSeconds = 3 } = playerArguments;
+		const { id, human = false, lockedCardTimeoutSeconds = 3, avatar = '' } = playerArguments;
 		this.#id = id || uuidV4();
 		this.#human = human;
 		this.#lockedCard = null;
 		this.#deck = new Deck();
 		this.#lockedCardTimeoutSeconds = lockedCardTimeoutSeconds;
+		this.#avatar = avatar;
 	}
 
 	get id () {
@@ -33,6 +35,10 @@ export default class Player {
 
 	get lockedCard() {
 		return this.#lockedCard;
+	}
+
+	get avatar() {
+		return this.#avatar;
 	}
 
 	getLockedCard() {

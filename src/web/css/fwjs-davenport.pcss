@@ -26,7 +26,6 @@
     }
 }
 
-
 body {
     background-color: #a2494b;
     background-image: url('img/red-background.jpg');
@@ -35,15 +34,22 @@ body {
     font-family: Verdana, sans-serif;
     font-size: .8rem;
 }
+#davenport {
+    display: flex;
+    flex-direction: column;
+    height: 99vh;
+}
 #playing-field {
     background-color: #487f2c;
     background-image: url('img/green-background.jpg');
     border-radius: 1rem;
     padding: 1rem;
+    flex-grow: 1;
 }
 
 header {
     text-align: center;
+    margin-bottom: 1rem;
 }
 
 header h1 {
@@ -55,6 +61,9 @@ header aside {
     font-size: .8rem;
 }
 
+footer {
+    min-height: 2rem;
+}
 /*textarea {
     width: 50rem;
     height: 15rem;
@@ -108,7 +117,19 @@ header aside {
     background: rgb(2,0,36);
     background: radial-gradient(circle, rgba(2,0,36,1) 0%, rgba(9,19,121,0.6558998599439776) 35%, rgba(0,212,255,1) 100%);
 }
+.card.movable {
+    position: absolute;
+}
 
+.card.outline {
+    background-color: transparent;
+    border: 2px dashed yellow;
+}
+
+.card.blank {
+    background-color: transparent;
+    border: 2px solid transparent;
+}
 
 nav ul {
     list-style-type: none;
@@ -133,80 +154,107 @@ nav ul li button.inactive {
     cursor: not-allowed;
 }
 
-
-
-#playing-field > section > div {
+.opponent {
     display: flex;
     flex-direction: row;
+    margin-bottom: .5rem;
+    min-height: calc(var(--card-size-height) + 1rem);
+}
+
+.opponent .data {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 4rem;
+}
+
+.opponent .data img.avatar {
+    border-radius: 50%;
+    background-color: white;
+    width: 3rem;
+}
+
+.opponent .card-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.opponent .card-list .card:not(:first-child) {
+    margin-left: -2rem;
+}
+
+.opponent .card-list .card.outline:not(:last-child) {
+    border-right-width: 0;
+}
+
+.battle-field {
+    display: flex;
+    flex-direction: row;
+}
+
+.battle-field .locked-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    margin-right: .5rem;
     align-items: center;
 }
 
-#playing-field > section > div .card-listing {
+.battle-field .locked-card.discard-deck {
+    margin-right: 1rem;
+}
+
+.battle-field .locked-card .name {
+    margin-bottom: .25rem;
+}
+
+.player-field {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.player-field .name {
+    font-size: 1.25rem;
+}
+
+.player-field .card-list {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    width: 100%;
 }
 
-#playing-field > section > div .card-listing.horizontal {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    width: 100%;
-}
 
-#playing-field > section > div .card-listing.vertical {
+
+#new-game {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    height: 100%;
+}
+#new-game button {
+    border-radius: 2rem;
+    background-color: yellow;
+    font-size: 2rem;
+    padding: .25rem .5rem;
+    font-weight: bold;
+    border: 1px solid black;
+}
+#new-game.hidden {
+    display: none;
 }
 
-
-
-#playing-field > section > div .card-listing.horizontal span.card {
-    margin-left: var(--card-left-offset);
+#overlay {
 }
 
-#playing-field > section > div .card-listing.horizontal span.card:first-child {
-    margin-left: 0;
+#overlay .card {
+    border-color: red;
 }
 
-#playing-field > section > div .card-listing.vertical span.card {
-    margin-top: var(--card-top-offset);
-}
-
-#playing-field > section > div .card-listing.vertical span.card:first-child {
-    margin-top: 0;
-}
-
-#playing-field > section > div {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-#playing-field section:nth-child(2) {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-
-#playing-field > section > #battle-pitch {
-    flex-grow: 2;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-#playing-field > section > #battle-pitch > div:nth-child(2) {
-    margin: 2rem 0;
-}
-
-#playing-field > section > #battle-pitch div:nth-child(2) {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
+.hidden {
+    display: none;
 }
 

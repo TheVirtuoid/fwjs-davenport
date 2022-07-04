@@ -9,97 +9,35 @@
         <title>Fun With JavaScript - Davenport Card Game</title>
     </head>
     <body>
-        <header>
-            <h1>Davenport Card Game</h1>
-            <aside>Brought to you by <a href="https://funwithjavascript.com" rel="noreferrer">Fun With JavaScript</a></aside>
-        </header>
-        <nav>
-            <ul id="actions">
-                <li><button type="button" id="start-round">Start Round</button></li>
-                <li><button type="button" id="reveal-cards" class="inactive">Reveal Cards</button></li>
-                <li><button type="button" id="draw-cards" class="inactive">Draw Cards</button></li>
-                <li>Choose your card in: <span id="seconds-remaining"></span> seconds.</li>
-            </ul>
-        </nav>
-        <section id="playing-field">
-            <section>
-                <div>
-                    <span></span>
-                    <span class="card-listing horizontal" id="Human-cards">
-                        <span class="card club"><span>5♣</span><span>♣</span><span>5♣</span></span>
-                        <span class="card club"><span>4♣</span><span>♣</span><span>4♣</span></span>
-                        <span class="card club"><span>A♣</span><span>♣</span><span>A♣</span></span>
-                        <span class="card heart"><span>9♥</span><span>♥</span><span>9♥</span></span>
-                        <span class="card heart"><span>J♥</span><span>♥</span><span>J♥</span></span>
-                    </span>
+        <section id="davenport">
+            <header>
+                <h1>Davenport Card Game</h1>
+                <aside>Brought to you by <a href="https://funwithjavascript.com" rel="noreferrer">Fun With JavaScript</a></aside>
+            </header>
+            <button id="go">go</button>
+            <!--<nav>
+                <ul id="actions">
+                    <li><button type="button" id="start-round">Start Round</button></li>
+                    <li><button type="button" id="reveal-cards" class="inactive">Reveal Cards</button></li>
+                    <li><button type="button" id="draw-cards" class="inactive">Draw Cards</button></li>
+                    <li>Choose your card in: <span id="seconds-remaining"></span> seconds.</li>
+                </ul>
+            </nav>-->
+            <section id="playing-field">
+                <section id="new-game" class="hidden">
+                    <button type="button">New Game</button>
+                </section>
 
-                </div>
-            </section>
-            <section>
-                <div>
-                    <span></span>
-                    <span class="card-listing vertical" id="Saitama-cards">
-                        <span class="card club"><span>10♣</span><span>♣</span><span>10♣</span></span>
-                        <span class="card heart"><span>K♥</span><span>♥</span><span>K♥</span></span>
-                        <span class="card diamond"><span>3♦</span><span>♦</span><span>3♦</span></span>
-                        <span class="card club"><span>K♣</span><span>♣</span><span>K♣</span></span>
-                        <span class="card diamond"><span>K♦</span><span>♦</span><span>K♦</span></span>
-                    </span>
-                </div>
-                <div id="battle-pitch">
-                    <div>
-                        <span id="Human-locked-card">
-                            <span class="card heart"><span>9♥</span><span>♥</span><span>9♥</span></span>
-                        </span>
-                    </div>
-                    <div>
-                        <span id="Saitama-locked-card">
-                            <span class="card club"><span>K♣</span><span>♣</span><span>K♣</span></span>
-                        </span>
-                        <span id="discard-pile">
-                            <span class="card club"><span>6♣</span><span>♣</span><span>6♣</span></span>
-                        </span>
-                        <span id="Rick S.-locked-card">
-                            <span class="card diamond"><span>4♦</span><span>♦</span><span>4♦</span></span>
-                        </span>
-                    </div>
-                    <div>
-                        <span id="Phineas-locked-card">
-                            <span class="card spade"><span>K♠</span><span>♠</span><span>K♠</span></span>
-                        </span>
-                    </div>
-                </div>
-                <div>
-                    <span></span>
-                    <span class="card-listing vertical" id="Rick S.-cards">
-                        <span class="card club"><span>6♣</span><span>♣</span><span>6♣</span></span>
-                        <span class="card diamond"><span>4♦</span><span>♦</span><span>4♦</span></span>
-                        <span class="card diamond"><span>4♦</span><span>♦</span><span>4♦</span></span>
-                        <span class="card diamond"><span>A♦</span><span>♦</span><span>A♦</span></span>
-                        <span class="card diamond"><span>6♦</span><span>♦</span><span>6♦</span></span>
-                    </span>
-                </div>
-            </section>
-            <section>
-                <div>
+                <section id="opponent-list">
+                </section>
 
-                    <span></span>
-                    <span class="card-listing horizontal" id="Phineas-cards">
-                        <span class="card club"><span>8♣</span><span>♣</span><span>8♣</span></span>
-                        <span class="card spade"><span>2♠</span><span>♠</span><span>2♠</span></span>
-                        <span class="card club"><span>J♣</span><span>♣</span><span>J♣</span></span>
-                        <span class="card spade"><span>K♠</span><span>♠</span><span>K♠</span></span>
-                        <span class="card diamond"><span>8♦</span><span>♦</span><span>8♦</span></span>
-                    </span>
-                </div>
+
             </section>
-            <!--<ul id="players">
-            </ul>-->
+            <!--<textarea id="results"></textarea>-->
+            <footer>
+                <p>&copy; 2022 Michael P. Smith a.k.a. TheVirtuoid. Free to use!</p>
+            </footer>
         </section>
-        <!--<textarea id="results"></textarea>-->
-        <footer>
-            <p>&copy; 2022 Michael P. Smith a.k.a. TheVirtuoid. Free to use!</p>
-        </footer>
-        <script src="/js/fwjs-davenport.js" type="module"></script>
     </body>
+    <script src="/js/fwjs-davenport.js" type="module"></script>
 </html>

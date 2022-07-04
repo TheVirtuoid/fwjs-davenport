@@ -3,12 +3,16 @@ import styles from "../css/fwjs-davenport.pcss";
 import Game from "../../classes/Game/Game.js";
 import Player from "../../classes/Player/Player.js";
 import DavenportCard from "./DavenportCard.js";
+import DavenportPlayer from "./DavenportPlayer";
+import {StandardCard, StandardCardRanks, StandardCardSuits} from "@virtuoid/standard-card";
 
 const players = [];
-players.push(new Player({ id: 'Human', human: false }));
-players.push(new Player({ id: 'Saitama' }));
-players.push(new Player({ id: 'Rick S.' }));
-players.push(new Player({ id: 'Phineas'}));
+players.push(new Player({ id: 'You', human: true }));
+players.push(new Player({ id: 'Waldo', avatar: 'img/waldo.webp' }));
+players.push(new Player({ id: 'Clarice', avatar: 'img/clarice.webp'  }));
+players.push(new Player({ id: 'Bert', avatar: 'img/bert.webp' }));
+
+const davenportPlayers = players.map((player) => new DavenportPlayer(player));
 
 const dealer = players[0];
 
@@ -108,6 +112,7 @@ const addToResults = (text) => {
 	results.textContent = `${results.textContent}\n${text}`;
 };
 
+/*
 const constructPlayer = (player, playerIndex) => {
 	const li = document.createElement('li');
 	let span = document.createElement('span');
@@ -122,6 +127,7 @@ const constructPlayer = (player, playerIndex) => {
 	li.appendChild(span);
 	return li;
 };
+*/
 
 const updateCards = (player) => {
 	const cardsDom = document.getElementById(`${player.id}-cards`);
@@ -175,9 +181,31 @@ const callbacks = {
 	roundEnd: callbackRoundEnd
 };*/
 
+const initializePlayingField = (davenportPlayers) => {
+	const cardLists = new Map();
+	const opponentList = document.getElementById('opponent-list');
+	const battleField = document.createElement('div');
+	battleField.classList.add('battle-field');
+	battleField.insertAdjacentHTML('afterbegin', `<div class="locked-card discard-deck"><span class="name"></span><span class="card back"></span></div>`);
+	opponentList.appendChild(battleField);
+	let humanPlayer = null;
+	davenportPlayers.forEach((davenportPlayer) => {
+		battleField.appendChild(davenportPlayer.lockedCardDom);
+		if (davenportPlayer.player.human) {
+			humanPlayer = davenportPlayer;
+		} else {
+			opponentList.appendChild(davenportPlayer.dom);
+		}
+		cardLists.set(davenportPlayer.player.id, davenportPlayer.dom.querySelector('.card-list'));
+	});
+	opponentList.appendChild(battleField);
+	opponentList.appendChild(humanPlayer.dom);
+	return cardLists;
+}
 
 const game = new Game({ players });
 game.initialize({ dealer, callbacks });
+const cardLists = initializePlayingField(davenportPlayers);
 
 /*
 const playerUL = document.getElementById('players');
@@ -193,3 +221,73 @@ game.start()
 })
 */
 
+document.querySelector('#new-game button').addEventListener('click', (event) => {
+	document.getElementById('new-game').classList.add('hidden');
+	document.getElementById('opponent-list').classList.remove('hidden');
+});
+
+const discardDeck = document.querySelector('.battle-field .discard-deck .card').getBoundingClientRect();
+
+const newCard = document.createElement('span');
+newCard.id = 'moving-card';
+newCard.classList.add('card', 'back', 'movable');
+newCard.style.top = `${discardDeck.top}px`;
+newCard.style.left = `${discardDeck.left}px`;
+document.body.appendChild(newCard);
+
+const cardTiming = {
+	duration: 250,
+	iterations: 1
+}
+
+const dealCard = (destination, index = -1) => {
+	return new Promise((resolve, reject) => {
+		const davenportPlayer = davenportPlayers.find((davenportPlayer) => davenportPlayer.player.id === destination);
+		const deck = cardLists.get(destination);
+		const empty = deck.querySelector('.card.blank');
+		const emptyClientRect = empty.getBoundingClientRect();
+		const newCardAnimation = [
+			{ transform: `translate(0px, 0px)` },
+			{ transform: `translate(${emptyClientRect.left - discardDeck.left}px, ${emptyClientRect.top - discardDeck.top}px) rotateZ(180deg)` }
+		];
+		const animation = newCard.animate(newCardAnimation, cardTiming);
+		animation.addEventListener('finish', () => {
+			empty.classList.remove('blank');
+			if (davenportPlayer.player.human && index !== -1) {
+				const playerDeck = davenportPlayer.player.deck.getCards();
+				const standardCard = playerDeck[index];
+				const davenportCard = new DavenportCard({ standardCard });
+				empty.innerHTML = davenportCard.dom.innerHTML;
+				empty.classList.remove('blank');
+				empty.classList.add(standardCard.suit.name);
+			} else {
+				empty.classList.add('back');
+			}
+			resolve();
+		}, { once: true })
+	});
+}
+
+let index = 0;
+
+const dealEveryone = async () => {
+	for(let i = 0, l = davenportPlayers.length; i < l; i++) {
+		await dealCard(davenportPlayers[i].player.id, index);
+	}
+	index++;
+}
+
+const initialDeal = () => {
+	dealEveryone()
+			.then(dealEveryone)
+			.then(dealEveryone)
+			.then(dealEveryone)
+			.then(dealEveryone);
+}
+
+
+
+
+document.getElementById('go').addEventListener('click', () => {
+	initialDeal();
+});
