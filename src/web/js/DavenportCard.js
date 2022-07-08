@@ -3,7 +3,7 @@ import {StandardCard} from "@virtuoid/standard-card";
 export default class DavenportCard {
 	#standardCard
 	#dom;
-	#faceUp;
+	#revealed;
 
 	constructor(davenportCardArguments = {}) {
 		const { standardCard, faceUp = false } = davenportCardArguments;
@@ -11,21 +11,21 @@ export default class DavenportCard {
 		this.#dom = document.createElement('span');
 		this.#dom.classList.add('card');
 		faceUp ? (this.faceUp()) : (this.faceDown());
-		this.#faceUp = faceUp;
+		this.#revealed = faceUp;
 	}
 
 	get dom () {
 		return this.#dom;
 	}
 
-	get faceUp() {
-		return this.#faceUp;
+	get revealed() {
+		return this.#revealed;
 	}
 
 	faceDown () {
 		this.#dom.innerHTML = '';
 		this.#dom.classList.add('back');
-		this.#faceUp = false;
+		this.#revealed = false;
 	}
 
 	faceUp () {
@@ -37,7 +37,7 @@ export default class DavenportCard {
 			this.#dom.classList.add(this.#standardCard.suit.name);
 		}
 		this.#dom.classList.remove('back');
-		this.#faceUp = true;
+		this.#revealed = true;
 	}
 
 	static cardMapping = new Map([
@@ -46,5 +46,12 @@ export default class DavenportCard {
 		['d', 9830],
 		['c', 9827],
 	])
+
+	static get discardDeckCard() {
+		const div = document.createElement('div');
+		div.classList.add('locked-card', 'discard-deck');
+		div.insertAdjacentHTML('afterbegin', '<span class="name"></span><span class="card back"></span>');
+		return div;
+	}
 
 }

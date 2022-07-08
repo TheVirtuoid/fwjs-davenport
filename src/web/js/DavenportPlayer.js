@@ -40,9 +40,9 @@ export default class DavenportPlayer {
 		this.#lockedCardDomCard = lockedCardDom.querySelector('.card');
 		this.#movingCard = new MovingCard();
 
-		this.#cardList.addEventListener('click', () => {
+		/*this.#cardList.addEventListener('click', () => {
 			this.playCard(4);
-		});
+		});*/
 	}
 
 	get dom() {
