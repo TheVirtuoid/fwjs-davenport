@@ -12,7 +12,7 @@ export default class DavenportController {
 		this.#domActions = domActions;
 		this.#domNewGame = domActions.querySelector('.new-game');
 		this.#domList = [this.#domNewGame];
-		this.changeToState(GameState.NEWGAME);
+		this.#state = GameState.NONE;
 	}
 
 	changeToState(state) {
@@ -25,11 +25,13 @@ export default class DavenportController {
 				this.#domNewGame.addEventListener('click', this.#newGame.bind(this), { once: true });
 				this.#activate(this.#domNewGame);
 				break;
-			case GameState.DEAL:
+			case GameState.INITIALDEAL:
 				break;
 			case GameState.INPROGRESS:
 				break;
 			case GameState.GAMEOVER:
+				break;
+			case GameState.INITIALIZE:
 				break;
 		}
 		this.#domActions.dispatchEvent(new CustomEvent('state-change', { detail: { state: this.#state } }));

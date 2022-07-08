@@ -38,6 +38,7 @@ export default class MovingCard {
 			dom.classList.remove('hidden');
 			const animate = dom.animate(animation, timing);
 			animate.addEventListener('finish', () => {
+				console.log('done');
 				dom.classList.add('hidden');
 				resolve();
 			}, { once: true })

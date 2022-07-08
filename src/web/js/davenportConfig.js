@@ -8,5 +8,6 @@ export const playersConfig = [
 ];
 
 export const animationTimingConfig = {
-		timing: { duration: 250, iterations: 1 }
+	duration: 250,
+	iterations: 1
 }

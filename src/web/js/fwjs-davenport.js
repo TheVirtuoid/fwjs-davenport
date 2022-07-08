@@ -12,7 +12,9 @@ import DavenportGame from "./DavenportGame.js";
 
 const davenportGame = new DavenportGame();
 davenportGame.initialize();
+davenportGame.start();
 
+/*
 const discardDeck = document.querySelector('.battle-field .discard-deck .card').getBoundingClientRect();
 
 
@@ -60,3 +62,4 @@ const initialDeal = () => {
 			.then(dealEveryone);
 }
 
+*/

@@ -33,7 +33,7 @@ export default class DavenportGame {
 	}
 
 	start() {
-
+		this.#controller.changeToState(GameState.NEWGAME);
 	}
 
 	dom(nodeName) {
@@ -51,6 +51,8 @@ export default class DavenportGame {
 				break;
 			case GameState.INITIALDEAL:
 				this.#field.initialDeal([...this.#players.values()]);
+				break;
+			case GameState.NONE:
 				break;
 		}
 	}

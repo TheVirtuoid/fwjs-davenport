@@ -25,12 +25,11 @@ export default class DavenportField {
 	}
 
 	initialDeal(davenportPlayers) {
-		this.#dealCard(davenportPlayers[0], -1);
-		/*this.#dealEveryone.bind(this)(davenportPlayers)
+		this.#dealEveryone.bind(this)(davenportPlayers)
 				.then(this.#dealEveryone.bind(this))
 				.then(this.#dealEveryone.bind(this))
 				.then(this.#dealEveryone.bind(this))
-				.then(this.#dealEveryone.bind(this));*/
+				.then(this.#dealEveryone.bind(this));
 	}
 
 	async #dealEveryone(davenportPlayers) {
