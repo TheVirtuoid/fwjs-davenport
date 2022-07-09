@@ -60,12 +60,69 @@ export default class DavenportField {
 	async #dealEveryone(dealEveryoneArguments) {
 		let { davenportPlayers, cardIndex } = dealEveryoneArguments;
 		for(let i = 0, l = davenportPlayers.length; i < l; i++) {
-			await this.#dealCard(davenportPlayers[i], cardIndex);
+			await this.#dealFromDiscardDeck(davenportPlayers[i], cardIndex);
 		}
 		cardIndex++;
 		return { davenportPlayers, cardIndex };
 	}
 
+
+
+	#playLockedCard(davenportPlayer, index = -1) {
+		const destination = davenportPlayer.player.id;
+		const playerCardList = this.#dom.get('cardLists').get(destination);
+		const allCards = [...playerCardList.querySelectorAll('.card')];
+		const battleCardRect = davenportPlayer.lockedCardDom.getBoundingClientRect();
+		const domSource = davenportPlayer.human ? allCards[index] : allCards[allCards.length - 1];
+		const domSourceRect = domSource.getBoundingClientRect();
+		const movement = {
+			from: [ domSourceRect.left, domSourceRect.top ],
+			to: [ battleCardRect.left, battleCardRect.top]
+		};
+		return this.#dealCard({ movement, domDestination: davenportPlayer.lockedCardDom, source: davenportCard })
+	}
+
+	#dealFromDiscardDeck(davenportPlayer, index = -1) {
+		const destination = davenportPlayer.player.id;
+		const playerCardList = this.#dom.get('cardLists').get(destination);
+		const firstEmptyCard = playerCardList.querySelector('.card.blank');
+		const emptyClientRect = firstEmptyCard.getBoundingClientRect();
+		const discardDeckRect = this.#dom.get('discard-deck').getBoundingClientRect();
+		let davenportCard;
+		if (davenportPlayer.player.human && index !== -1) {
+			const playerDeck = davenportPlayer.player.deck.getCards();
+			const standardCard = playerDeck[index];
+			davenportCard = new DavenportCard({ standardCard, faceUp: true });
+		} else {
+			davenportCard = new DavenportCard({ faceUp: false });
+		}
+		const movement = {
+			from: [ discardDeckRect.left, discardDeckRect.top ],
+			to: [ emptyClientRect.left, emptyClientRect.top]
+		};
+		return this.#dealCard({ movement, domDestination: firstEmptyCard, source: davenportCard })
+	}
+
+	#dealCard(parameters = {}) {
+		const { movement, domDestination, source } = parameters;
+		const self = this;
+		return new Promise((resolve, reject) => {
+			self.#movingCard.move(movement)
+					.then(() => {
+						domDestination.classList.remove('blank');
+						if (source.revealed) {
+							domDestination.innerHTML = source.dom.innerHTML;
+							domDestination.classList.add(source.suit.name);
+						} else {
+							domDestination.classList.add('back');
+						}
+						resolve();
+					});
+		});
+	}
+
+
+	/*
 	#dealCard(davenportPlayer, index = -1) {
 		const self = this;
 		return new Promise((resolve, reject) => {
@@ -94,6 +151,7 @@ export default class DavenportField {
 					});
 		});
 	}
+*/
 
 	/*
 

@@ -19,7 +19,7 @@ export default class DavenportPlayer {
 			dom.classList.add('opponent')
 			const dataDiv = document.createElement('div');
 			dataDiv.classList.add('data');
-			dataDiv.insertAdjacentHTML('afterBegin', `<span class="name">${player.id}</span>`)
+			dataDiv.insertAdjacentHTML('afterbegin', `<span class="name">${player.id}</span>`)
 			dataDiv.insertAdjacentHTML('afterbegin', `<img src="${player.avatar}" alt="Opponent ${player.id}" class="avatar"/>`);
 			dom.appendChild(dataDiv);
 		}

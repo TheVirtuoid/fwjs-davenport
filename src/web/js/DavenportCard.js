@@ -22,6 +22,10 @@ export default class DavenportCard {
 		return this.#revealed;
 	}
 
+	get suit() {
+		return this.#standardCard.suit;
+	}
+
 	faceDown () {
 		this.#dom.innerHTML = '';
 		this.#dom.classList.add('back');
