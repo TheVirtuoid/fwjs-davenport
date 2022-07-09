@@ -6,7 +6,7 @@ export default class DavenportCard {
 	#revealed;
 
 	constructor(davenportCardArguments = {}) {
-		const { standardCard, faceUp = false } = davenportCardArguments;
+		const { standardCard, faceUp = false, blank = false } = davenportCardArguments;
 		this.#standardCard = standardCard;
 		this.#dom = document.createElement('span');
 		this.#dom.classList.add('card');
@@ -58,4 +58,15 @@ export default class DavenportCard {
 		return div;
 	}
 
+	static get blankCard() {
+		const card = document.createElement('span');
+		card.classList.add('card', 'blank');
+		return card;
+	}
+
+	static replace(cardTo, cardFrom) {
+		cardTo.innerHTML = cardFrom.innerHTML;
+		cardTo.classList.remove(...cardTo.classList);
+		cardTo.classList.add(...cardFrom.classList);
+	}
 }

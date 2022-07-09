@@ -25,6 +25,10 @@ export default class MovingCard {
 		this.#card.faceUp();
 	}
 
+	get dom() {
+		return this.#card.dom;
+	}
+
 	move(movementParameters) {
 		return new Promise((resolve, reject) => {
 			const { from, to, timing = this.#timing } = movementParameters;

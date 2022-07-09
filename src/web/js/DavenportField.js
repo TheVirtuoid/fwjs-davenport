@@ -60,7 +60,9 @@ export default class DavenportField {
 	async #dealEveryone(dealEveryoneArguments) {
 		let { davenportPlayers, cardIndex } = dealEveryoneArguments;
 		for(let i = 0, l = davenportPlayers.length; i < l; i++) {
-			await this.#dealFromDiscardDeck(davenportPlayers[i], cardIndex);
+			const player = davenportPlayers[i].player;
+			const card = player.human ? new DavenportCard({ standardCard: player.deck.getCards()[cardIndex], faceUp: true }) : null;
+			await davenportPlayers[i].drawCard(this.dom('discard-deck'), card);
 		}
 		cardIndex++;
 		return { davenportPlayers, cardIndex };
@@ -68,9 +70,9 @@ export default class DavenportField {
 
 
 
-	#playLockedCard(davenportPlayer, index = -1) {
+	/*#playLockedCard(davenportPlayer, index = -1) {
 		const destination = davenportPlayer.player.id;
-		const playerCardList = this.#dom.get('cardLists').get(destination);
+		const playerCardList = this.dom('cardLists').get(destination);
 		const allCards = [...playerCardList.querySelectorAll('.card')];
 		const battleCardRect = davenportPlayer.lockedCardDom.getBoundingClientRect();
 		const domSource = davenportPlayer.human ? allCards[index] : allCards[allCards.length - 1];
@@ -80,9 +82,9 @@ export default class DavenportField {
 			to: [ battleCardRect.left, battleCardRect.top]
 		};
 		return this.#dealCard({ movement, domDestination: davenportPlayer.lockedCardDom, source: davenportCard })
-	}
+	}*/
 
-	#dealFromDiscardDeck(davenportPlayer, index = -1) {
+	/*#dealFromDiscardDeck(davenportPlayer, index = -1) {
 		const destination = davenportPlayer.player.id;
 		const playerCardList = this.#dom.get('cardLists').get(destination);
 		const firstEmptyCard = playerCardList.querySelector('.card.blank');
@@ -101,9 +103,9 @@ export default class DavenportField {
 			to: [ emptyClientRect.left, emptyClientRect.top]
 		};
 		return this.#dealCard({ movement, domDestination: firstEmptyCard, source: davenportCard })
-	}
+	}*/
 
-	#dealCard(parameters = {}) {
+	/*#dealCard(parameters = {}) {
 		const { movement, domDestination, source } = parameters;
 		const self = this;
 		return new Promise((resolve, reject) => {
@@ -119,7 +121,7 @@ export default class DavenportField {
 						resolve();
 					});
 		});
-	}
+	}*/
 
 
 	/*
