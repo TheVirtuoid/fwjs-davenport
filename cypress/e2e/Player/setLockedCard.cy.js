@@ -23,11 +23,12 @@ describe('setLockedCard', () => {
 			expect(err.name).to.equal('Error');
 		}
 	});
-	it('should set the locked card', () => {
+	it('should set the locked card and remove it from the deck', () => {
 		const player = new Player({ human: false });
 		const card = new StandardCard({ suit: StandardCardSuits.CLUB, rank: StandardCardRanks.ACE, value: 1});
 		player.deck.add(card);
 		player.setLockedCard(card);
 		expect(player.lockedCard.is(card)).to.be.true;
+		expect(player.deck.cardCount).to.equal(0);
 	});
 });
