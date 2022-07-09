@@ -1,7 +1,7 @@
 import MovingCard from "./MovingCard.js";
 
 export const playersConfig = [
-	{ id: 'You', human: true },
+	{ id: 'You', human: true, lockedCardTimeoutSeconds: 30 },
 	{ id: 'Waldo', avatar: 'img/waldo.webp' },
 	{ id: 'Clarice', avatar: 'img/clarice.webp'  },
 	{ id: 'Bert', avatar: 'img/bert.webp' }

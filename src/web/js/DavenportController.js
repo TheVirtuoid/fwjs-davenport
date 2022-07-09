@@ -2,6 +2,7 @@ import GameState from "./GameState.js";
 import DavenportCard from "./DavenportCard.js";
 
 export default class DavenportController {
+/*
 	#state;
 	#domNewGame;
 	#domList;
@@ -48,4 +49,5 @@ export default class DavenportController {
 		this.changeToState(GameState.INITIALDEAL);
 	}
 
+*/
 }
