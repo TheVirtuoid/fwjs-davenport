@@ -3,8 +3,6 @@ import { playersConfig } from "./davenportConfig.js";
 import DavenportPlayer from "./DavenportPlayer.js";
 import DavenportField from "./DavenportField.js";
 import Game from "../../classes/Game/Game.js";
-import DavenportController from "./DavenportController.js";
-import GameState from "./GameState.js";
 import DavenportCard from "./DavenportCard.js";
 
 export default class DavenportGame {
@@ -39,8 +37,8 @@ export default class DavenportGame {
 			beforeDetermineWinner: this.#callbackBeforeDetermineWinner.bind(this),
 			afterDetermineWinner: this.#callbackAfterDetermineWinner.bind(this),
 			beforeReplaceCards: this.#callbackBeforeReplaceCards.bind(this),
-			afterReplaceCards: this.#callbackAfterReplaceCards.bind(this),
-			roundEnd: this.#callbackRoundEnd.bind(this)
+			afterReplaceCards: this.#callbackAfterReplaceCards.bind(this)
+			// roundEnd: this.#callbackRoundEnd.bind(this)
 		};
 
 	}
@@ -57,10 +55,6 @@ export default class DavenportGame {
 		this.#dom.set('new-game', domNewGame);
 		this.#game.initialize({ dealer: this.#dealer, callbacks: this.#callbacks });
 
-		/*document.getElementById('go').addEventListener('click', () => {
-			const domCard = this.#field.dom('discard-deck');
-			this.#players.get('Waldo').drawCard(domCard);
-		});*/
 	}
 
 	start() {
@@ -73,12 +67,20 @@ export default class DavenportGame {
 
 	#startNewGame() {
 		const setStatus = this.#setStatus.bind(this);
-		const gameStart = this.#game.start.bind(this.#game);
+		const game = this.#game;
+		const gameStart = game.start.bind(game);
+		const players = [...this.#players.values()];
 		setStatus();
-		this.#field.initialDeal([...this.#players.values()])
+		this.#field.initialDeal(players)
 				.then(() => gameStart())
 				.then(() => {
-					setStatus('Game Over');
+					if (game.error) {
+						setStatus(`Game Over: ${game.error.exception.message}`);
+					} else {
+						const davenportPlayer = players.find((davenportPlayer) => davenportPlayer.player.id === game.winner.id);
+						davenportPlayer.cardList.insertAdjacentHTML('afterbegin', '<span class="winner">WINNER</span>');
+						setStatus(`Game Over: Winner is ${game.winner.id}`);
+					}
 				});
 	}
 
@@ -106,7 +108,7 @@ export default class DavenportGame {
 				const player = allAiPlayers[i];
 				await player.playCard.bind(player)(-1);
 			}
-			setStatus(`<span>Choose your card n 30 seconds</span>`);
+			setStatus(`<span>Choose your card in 30 seconds</span>`);
 			self.#humanPlayer.activateLockedCardSelection();
 			resolve(round);
 		});
@@ -125,7 +127,6 @@ export default class DavenportGame {
 	#callbackBeforeDetermineWinner (round) {
 		const setStatus = this.#setStatus.bind(this);
 		return new Promise(async (resolve, reject) => {
-			setStatus(`<span>BeforeDetermineWinner ${round.roundNumber}</span>`);
 			const allAiPlayers = [...this.#aiPlayers.values()];
 			for(let i = 0, l = allAiPlayers.length; i < l; i++) {
 				const player = allAiPlayers[i];
@@ -134,13 +135,12 @@ export default class DavenportGame {
 			setTimeout(() => {
 				setStatus();
 				resolve(round);
-			}, 2000);
+			}, 500);
 		});
 	};
 	#callbackAfterDetermineWinner (round) {
 		const setStatus = this.#setStatus.bind(this);
 		return new Promise((resolve, reject) => {
-			console.log(round);
 			if (round.winners.length === 1) {
 				const davenportWinner = [...this.#players.values()].find((player) => player.player === round.winners[0]);
 				setStatus(`<span>WINNER! ${davenportWinner.player.id}</span>`);
@@ -158,7 +158,6 @@ export default class DavenportGame {
 		const setStatus = this.#setStatus.bind(this);
 		const domDiscardDeck = this.#field.dom('discard-deck');
 		return new Promise(async (resolve, reject) => {
-			// setStatus(`<span>BeforeReplaceCards ${round.roundNumber}</span>`);
 			const allPlayers = [...this.#players.values()];
 			for(let i = 0, l = allPlayers.length; i < l; i++) {
 				await allPlayers[i].player.removeLockedCard();
@@ -179,7 +178,6 @@ export default class DavenportGame {
 			for(let i = 0, l = allPlayers.length; i < l; i++) {
 				const davenportPlayer = allPlayers[i];
 				const player = davenportPlayer.player;
-				console.log(player.id, player.deck.getCards());
 				if (player !== winner) {
 					const card = player.human ?
 							new DavenportCard({ standardCard: player.deck.getCards()[player.deck.cardCount - 1], faceUp: true }) : null;
@@ -189,7 +187,7 @@ export default class DavenportGame {
 			setTimeout(() => {
 				setStatus();
 				resolve(round);
-			}, 2000);
+			}, 500);
 		});
 	};
 	#callbackRoundEnd (round) {
@@ -210,59 +208,4 @@ export default class DavenportGame {
 			domStatus.insertAdjacentHTML('afterbegin', `<span>${text}</span>`);
 		}
 	}
-
-
-
-
-
-	/*
-		#players = new Map();
-		#dealer;
-		#field;
-		#controller;
-		#game;
-
-		constructor() {
-			playersConfig.forEach((playerCredentials) => {
-				const player = new Player(playerCredentials);
-				this.#players.set(playerCredentials.id, new DavenportPlayer(player));
-			});
-			this.#dealer = [...this.#players.values()][0].player;
-			this.#field = new DavenportField();
-			this.#game = new Game({ players: [...this.#players.values()].map((davenportPlayer) => davenportPlayer.player) });
-			this.dom('actions').addEventListener('state-change', this.#gameStateChange.bind(this));
-			this.#controller = new DavenportController(this.dom('actions'));
-		}
-
-		initialize() {
-			const callbacks = {};
-			this.#field.initialize({ davenportPlayers: [...this.#players.values()] });
-			this.#game.initialize({ dealer: this.#dealer, callbacks });
-		}
-
-		start() {
-			this.#controller.changeToState(GameState.NEWGAME);
-		}
-
-		dom(nodeName) {
-			return this.#field.dom.get(nodeName);
-		}
-
-		#gameStateChange(event) {
-			const { state } = event.detail;
-			switch(state) {
-				case GameState.NEWGAME:
-					break;
-				case GameState.INPROGRESS:
-					break;
-				case GameState.GAMEOVER:
-					break;
-				case GameState.INITIALDEAL:
-					this.#field.initialDeal([...this.#players.values()]);
-					break;
-				case GameState.NONE:
-					break;
-			}
-		}
-	*/
 }

@@ -44,6 +44,10 @@ export default class DavenportPlayer {
 		return this.#dom;
 	}
 
+	get cardList() {
+		return this.#cardList;
+	}
+
 	get player() {
 		return this.#player;
 	}
@@ -62,12 +66,16 @@ export default class DavenportPlayer {
 
 	#processLockedCardClick(event) {
 		const cardSelected = event.target.parentElement.card;
-		const cardIndex = this.#player.deck.findCard(cardSelected);
-		if (cardIndex !== -1) {
-			this.playCard(cardIndex, cardSelected.suit.name)
-					.then(() => {
-						this.#player.setLockedCard(cardSelected);
-					});
+		if (!(cardSelected instanceof StandardCard)) {
+			this.activateLockedCardSelection();
+		} else {
+			const cardIndex = this.#player.deck.findCard(cardSelected);
+			if (cardIndex !== -1) {
+				this.playCard(cardIndex, cardSelected.suit.name)
+						.then(() => {
+							this.#player.setLockedCard(cardSelected);
+						});
+			}
 		}
 	}
 
