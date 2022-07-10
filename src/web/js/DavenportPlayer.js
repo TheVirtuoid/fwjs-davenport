@@ -1,5 +1,6 @@
 import DavenportCard from "./DavenportCard.js";
 import MovingCard from "./MovingCard.js";
+import {StandardCard} from "@virtuoid/standard-card";
 
 export default class DavenportPlayer {
 	#player;
@@ -26,11 +27,7 @@ export default class DavenportPlayer {
 		dom.setAttribute('data-id', player.id);
 		const cardDivs = document.createElement('div');
 		cardDivs.classList.add('card-list');
-/*
-		for(let i = 0; i < 5; i++) {
-			cardDivs.insertAdjacentHTML('afterbegin', `<span class="card blank"></span>`);
-		}
-*/
+
 		dom.appendChild(cardDivs);
 		this.#dom = dom;
 		this.#cardList = cardDivs;
@@ -55,27 +52,49 @@ export default class DavenportPlayer {
 		return this.#lockedCardDom;
 	}
 
+	get lockedCardDomCard() {
+		return this.#lockedCardDomCard;
+	}
+
 	activateLockedCardSelection() {
 		this.#cardList.addEventListener('click', this.#processLockedCardClick.bind(this), { once: true });
 	}
 
 	#processLockedCardClick(event) {
-		console.log(event.target);
-		this.#player.setLockedCard(this.#player.deck.getCards()[0]);
+		const cardSelected = event.target.parentElement.card;
+		const cardIndex = this.#player.deck.findCard(cardSelected);
+		if (cardIndex !== -1) {
+			this.playCard(cardIndex, cardSelected.suit.name)
+					.then(() => {
+						this.#player.setLockedCard(cardSelected);
+					});
+		}
 	}
 
 	flipLockedCard() {
 		const lockedCard = this.#lockedCardDomCard;
+		const standardCard = this.#player.lockedCard;
 		const animation = [
-			{ transform: `rotateX(90deg)` }
+			{ transform: `rotateY(180deg)` }
 		]
-		const timing = { duration: 2000, iterations: 1 };
-		return new Promise((resolve, reject) => {
-			const animate = lockedCard.animate(animation, timing);
-			animate.addEventListener('finish', () => {
-				resolve();
-			}, { once: true })
-		});
+		const timing = { duration: 250, iterations: 1, fill: 'backwards' };
+		return flipTheCard({ lockedCard, animation, timing })
+				.then((parameters) => {
+					const davenportCard = new DavenportCard({ standardCard, faceUp: true });
+					DavenportCard.replace(lockedCard, davenportCard.dom);
+					return Promise.resolve(parameters);
+				});
+
+
+		function flipTheCard(parameters) {
+			const { lockedCard, animation, timing } = parameters;
+			return new Promise((resolve) => {
+				const animate = lockedCard.animate(animation, timing);
+				animate.addEventListener('finish', () => {
+					resolve({ lockedCard, animation, timing });
+				}, { once: true })
+			});
+		}
 	}
 
 	drawCard(domCard, outputCard) {
@@ -98,66 +117,60 @@ export default class DavenportPlayer {
 		});
 	}
 
-	playCard(index) {
+	discardCard(discardDeck) {
+		this.#movingCard.faceDown();
+		const fromRect = this.#lockedCardDomCard.getBoundingClientRect();
+		const toRect = discardDeck.getBoundingClientRect();
+		/*this.#cardList.appendChild(newCard);
+		const newCardRect = newCard.getBoundingClientRect();*/
+		const movement = {
+			from: [fromRect.left, fromRect.top],
+			to: [toRect.left, toRect.top]
+		}
+		return new Promise((resolve) => {
+			this.#lockedCardDomCard.classList.remove(...this.#lockedCardDomCard.classList);
+			this.#lockedCardDomCard.classList.add('card', 'outline');
+			this.#lockedCardDomCard.innerHTML = '';
+			this.#movingCard.move(movement)
+					.then( () => {
+						// DavenportCard.replace(newCard, outputCard ? outputCard.dom : domCard);
+						resolve();
+					});
+		});
+	}
+
+	playCard(index, cardClass = '') {
 		const self = this;
 		const newCard = this.#lockedCardDomCard;
+		let timing = 250;
 		let domCard;
 		if (index === -1) {
 			domCard = [...this.#cardList.querySelectorAll('.card')].at(-1);
-			/*DavenportCard.replace(this.#movingCard.dom, domCard);
-			this.#movingCard.dom.classList.add('moving');*/
 			this.#movingCard.faceDown();
 		} else {
 			domCard = this.#cardList.querySelector(`.card:nth-child(${index + 1})`);
-			DavenportCard.replace(this.#movingCard.dom, domCard);
-			this.#movingCard.dom.classList.add('moving');
+			this.#movingCard.dom.innerHTML = domCard.innerHTML;
+			this.#movingCard.dom.classList.add(cardClass)
 			this.#movingCard.faceUp();
 		}
 		const cardRect = domCard.getBoundingClientRect();
 		const newCardRect = newCard.getBoundingClientRect();
 		const movement = {
 			from: [cardRect.left, cardRect.top],
-			to: [newCardRect.left, newCardRect.top]
+			to: [newCardRect.left, newCardRect.top],
+			timing: { duration: timing, iterations: 1 }
 		}
 		return new Promise((resolve) => {
 			domCard.parentElement.removeChild(domCard);
 			self.#movingCard.move(movement)
 					.then( () => {
+						if (index !== -1) {
+							self.#movingCard.dom.innerHTML = '';
+							self.#movingCard.dom.classList.remove(cardClass);
+						}
 						DavenportCard.replace(newCard, domCard);
 						resolve();
 					});
 		});
 	}
-
-
-/*
-	playCard(index) {
-		const playerDeck = this.#player.deck.getCards();
-		const standardCard = playerDeck[index];
-		const davenportCard = new DavenportCard({ standardCard });
-		if (this.#player.human) {
-			this.#movingCard.faceUp();
-		} else {
-			this.#movingCard.faceDown();
-		}
-		const cardToMove = this.#cardList.querySelector(`.card:nth-child(${index+1})`);
-		const cardPosition = cardToMove.getBoundingClientRect();
-		const lockedCardPosition = this.#lockedCardDomCard.getBoundingClientRect();
-		const self = this;
-
-		const movement = {
-			from: [cardPosition.left, cardPosition.top],
-			to: [lockedCardPosition.left, lockedCardPosition.top]
-		}
-		cardToMove.classList.add('hidden');
-		this.#movingCard.move(movement)
-				.then(() => {
-					self.#lockedCardDomCard.classList.remove('outline');
-					if (!self.#player.human) {
-						self.#lockedCardDomCard.classList.add('back');
-					}
-					// self.#lockedCardDomCard.innerHTML = davenportCard.dom.innerHTML;
-				});
-	}
-*/
 }

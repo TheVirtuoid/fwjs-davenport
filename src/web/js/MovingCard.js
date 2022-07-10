@@ -2,7 +2,6 @@ import DavenportCard from "./DavenportCard.js";
 
 export default class MovingCard {
 	#card;
-	#dom;
 	#timing;
 
 	constructor(movingCardArguments = {}) {

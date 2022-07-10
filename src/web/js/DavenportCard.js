@@ -12,6 +12,7 @@ export default class DavenportCard {
 		this.#dom.classList.add('card');
 		faceUp ? (this.faceUp()) : (this.faceDown());
 		this.#revealed = faceUp;
+		this.#dom.card = standardCard;
 	}
 
 	get dom () {
@@ -68,5 +69,6 @@ export default class DavenportCard {
 		cardTo.innerHTML = cardFrom.innerHTML;
 		cardTo.classList.remove(...cardTo.classList);
 		cardTo.classList.add(...cardFrom.classList);
+		cardTo.card = cardFrom.card;
 	}
 }

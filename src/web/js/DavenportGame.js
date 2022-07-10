@@ -57,10 +57,10 @@ export default class DavenportGame {
 		this.#dom.set('new-game', domNewGame);
 		this.#game.initialize({ dealer: this.#dealer, callbacks: this.#callbacks });
 
-		document.getElementById('go').addEventListener('click', () => {
+		/*document.getElementById('go').addEventListener('click', () => {
 			const domCard = this.#field.dom('discard-deck');
 			this.#players.get('Waldo').drawCard(domCard);
-		});
+		});*/
 	}
 
 	start() {
@@ -106,7 +106,7 @@ export default class DavenportGame {
 				const player = allAiPlayers[i];
 				await player.playCard.bind(player)(-1);
 			}
-			setStatus(`<span>Select your card within 30 seconds</span>`);
+			setStatus(`<span>Choose your card n 30 seconds</span>`);
 			self.#humanPlayer.activateLockedCardSelection();
 			resolve(round);
 		});
@@ -126,10 +126,10 @@ export default class DavenportGame {
 		const setStatus = this.#setStatus.bind(this);
 		return new Promise(async (resolve, reject) => {
 			setStatus(`<span>BeforeDetermineWinner ${round.roundNumber}</span>`);
-			const allAiPlayers = [...self.#aiPlayers.values()];
+			const allAiPlayers = [...this.#aiPlayers.values()];
 			for(let i = 0, l = allAiPlayers.length; i < l; i++) {
 				const player = allAiPlayers[i];
-				await player.flipLockedCard.bind(player);
+				await player.flipLockedCard.bind(player)();
 			}
 			setTimeout(() => {
 				setStatus();
@@ -140,7 +140,14 @@ export default class DavenportGame {
 	#callbackAfterDetermineWinner (round) {
 		const setStatus = this.#setStatus.bind(this);
 		return new Promise((resolve, reject) => {
-			setStatus(`<span>AfterDetermineWinner ${round.roundNumber}</span>`);
+			console.log(round);
+			if (round.winners.length === 1) {
+				const davenportWinner = [...this.#players.values()].find((player) => player.player === round.winners[0]);
+				setStatus(`<span>WINNER! ${davenportWinner.player.id}</span>`);
+				davenportWinner.lockedCardDomCard.classList.add('winner');
+			} else {
+				setStatus(`<span>TIE GAME!</span>`);
+			}
 			setTimeout(() => {
 				setStatus();
 				resolve(round);
@@ -149,8 +156,14 @@ export default class DavenportGame {
 	};
 	#callbackBeforeReplaceCards (round) {
 		const setStatus = this.#setStatus.bind(this);
-		return new Promise((resolve, reject) => {
-			setStatus(`<span>BeforeReplaceCards ${round.roundNumber}</span>`);
+		const domDiscardDeck = this.#field.dom('discard-deck');
+		return new Promise(async (resolve, reject) => {
+			// setStatus(`<span>BeforeReplaceCards ${round.roundNumber}</span>`);
+			const allPlayers = [...this.#players.values()];
+			for(let i = 0, l = allPlayers.length; i < l; i++) {
+				await allPlayers[i].player.removeLockedCard();
+				await allPlayers[i].discardCard(domDiscardDeck);
+			}
 			setTimeout(() => {
 				setStatus();
 				resolve(round);
@@ -159,8 +172,20 @@ export default class DavenportGame {
 	};
 	#callbackAfterReplaceCards (round) {
 		const setStatus = this.#setStatus.bind(this);
-		return new Promise((resolve, reject) => {
-			setStatus(`<span>AfterReplaceCards ${round.roundNumber}</span>`);
+		const domDiscardDeck = this.#field.dom('discard-deck');
+		return new Promise(async (resolve, reject) => {
+			const winner = round.winners.length === 1 ? round.winners[0] : null;
+			const allPlayers = [...this.#players.values()];
+			for(let i = 0, l = allPlayers.length; i < l; i++) {
+				const davenportPlayer = allPlayers[i];
+				const player = davenportPlayer.player;
+				console.log(player.id, player.deck.getCards());
+				if (player !== winner) {
+					const card = player.human ?
+							new DavenportCard({ standardCard: player.deck.getCards()[player.deck.cardCount - 1], faceUp: true }) : null;
+					await davenportPlayer.drawCard(domDiscardDeck, card);
+				}
+			}
 			setTimeout(() => {
 				setStatus();
 				resolve(round);

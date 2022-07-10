@@ -69,10 +69,11 @@ export default class Player {
 		if (!(card instanceof StandardCard)) {
 			throw new TypeError(`'card' argument is not an instance of Card.`);
 		}
-		if (this.#deck.findCard(card) === -1) {
+		const cardToRemoveIndex = this.#deck.findCard(card);
+		if (cardToRemoveIndex === -1) {
 			throw new Error(`'card' argument is not a card within the deck.`);
 		}
-		this.#lockedCard = card;
+		this.#lockedCard = this.#deck.remove(cardToRemoveIndex);
 	}
 
 	removeLockedCard() {
