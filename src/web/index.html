@@ -9,29 +9,21 @@
         <title>Fun With JavaScript - Davenport Card Game</title>
     </head>
     <body>
-        <header>
-            <h1>Fun With JavaScript - Davenport Card Game</h1>
-        </header>
-        <main>
-            <nav>
-                <ul id="actions">
-                    <li><button type="button" id="start-round">Start Round</button></li>
-                    <li><button type="button" id="reveal-cards" class="inactive">Reveal Cards</button></li>
-                    <li><button type="button" id="draw-cards" class="inactive">Draw Cards</button></li>
-                    <li>Choose your card in: <span id="seconds-remaining"></span> seconds.</li>
-                </ul>
-            </nav>
-
-            <section>
-                <ul id="players">
-                </ul>
+        <section id="davenport">
+            <header>
+                <h1>Davenport Card Game</h1>
+                <aside>Brought to you by <a href="https://www.funwithjavascript.com" rel="noreferrer">Fun With JavaScript</a></aside>
+            </header>
+            <section id="playing-field">
+                <section id="opponent-list">
+                </section>
+                <section id="status">
+                </section>
             </section>
-
-            <textarea id="results"></textarea>
-        </main>
-        <footer>
-            <p>&copy; 2022 Michael P. Smith a.k.a. TheVirtuoid. Free to use!</p>
-        </footer>
-        <script src="/js/fwjs-davenport.js" type="module"></script>
+            <footer>
+                <p>&copy; 2022 Michael P. Smith a.k.a. TheVirtuoid. Free to use!</p>
+            </footer>
+        </section>
     </body>
+    <script src="/js/fwjs-davenport.js" type="module"></script>
 </html>

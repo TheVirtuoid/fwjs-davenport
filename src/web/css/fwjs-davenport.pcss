@@ -1,121 +1,72 @@
-:root {
-    --card-size-width: 5rem;
-    --card-size-height: 8rem;
-    --cell-size-width: var(--card-size-width);
-    --cell-size-height: var(--card-size-height);
-    --cell-horizontal-offset: -3rem;
-    --cell-vertical-offset: -6rem;
-    --card-font-size: 1.5rem;
+@media (max-width: 540px) {
+    :root {
+        --card-size-width: 2.5rem;
+        --card-size-height: 4.5rem;
+        --cell-size-width: var(--card-size-width);
+        --cell-size-height: var(--card-size-height);
+        --cell-horizontal-offset: -3rem;
+        --cell-vertical-offset: -6rem;
+        --card-font-size: 1rem;
+        --card-left-offset: -2rem;
+        --card-top-offset: -4rem;
+    }
 }
 
-textarea {
-    width: 50rem;
-    height: 15rem;
-    font-family: monospace;
-    font-size: 12px;
+@media (min-width: 541px) {
+    :root {
+        --card-size-width: 3.5rem;
+        --card-size-height: 5.5rem;
+        --cell-size-width: var(--card-size-width);
+        --cell-size-height: var(--card-size-height);
+        --cell-horizontal-offset: -3rem;
+        --cell-vertical-offset: -6rem;
+        --card-font-size: 1rem;
+        --card-left-offset: -2rem;
+        --card-top-offset: -4rem;
+    }
 }
 
-#pitch {
-    display: grid;
-    grid-template-columns: repeat(8, var(--cell-size-width));
-    grid-template-rows: repeat(8, var(--cell-size-height));
-    column-gap: .5rem;
-    row-gap: .5rem;
+body {
+    background-color: #a2494b;
+    background-image: url('img/red-background.jpg');
+    padding: 0rem .5rem;
+    color: white;
+    font-family: Verdana, sans-serif;
+    font-size: .8rem;
 }
-
-#pitch .player0 {
-    grid-column-start: 3;
-    grid-column-end: 7;
-    grid-row-start: 1;
-    grid-row-end: 2;
-    background-color: green;
-    align-self: center;
-}
-
-#pitch .player0-locked {
-    grid-column-start: 3;
-    grid-column-end: 7;
-    grid-row-start: 2;
-    grid-row-end: 3;
-    background-color: orange;
-}
-
-#pitch .player2 {
-    grid-column-start: 3;
-    grid-column-end: 7;
-    grid-row-start: 8;
-    grid-row-end: 9;
-    background-color: purple;
-}
-
-#pitch .player2-locked {
-    grid-column-start: 3;
-    grid-column-end: 7;
-    grid-row-start: 7;
-    grid-row-end: 8;
-    background-color: blue;
-}
-
-#pitch .player1 {
-    grid-column-start: 8;
-    grid-column-end: 9;
-    grid-row-start: 3;
-    grid-row-end: 7;
-    background-color: red;
-}
-
-#pitch .player1-locked {
-    grid-column-start: 7;
-    grid-column-end: 8;
-    grid-row-start: 3;
-    grid-row-end: 7;
-    background-color: pink;
-}
-
-#pitch .player3 {
-    grid-column-start: 1;
-    grid-column-end: 2;
-    grid-row-start: 3;
-    grid-row-end: 7;
-    background-color: yellow;
-}
-
-#pitch .player3-locked {
-    grid-column-start: 2;
-    grid-column-end: 3;
-    grid-row-start: 3;
-    grid-row-end: 7;
-    background-color: brown;
-}
-
-#pitch div {
-    border: 1px solid black;
+#davenport {
     display: flex;
-}
-
-#pitch div.row {
-    flex-direction: row;
-}
-
-#pitch div.column {
     flex-direction: column;
+    height: 99vh;
+}
+#playing-field {
+    background-color: #487f2c;
+    background-image: url('img/green-background.jpg');
+    border-radius: 1rem;
+    padding: 1rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
 }
 
-
-#pitch .player0 .card, #pitch .player2 .card {
-    margin-left: var(--cell-horizontal-offset);
+header {
+    text-align: center;
+    margin-bottom: 1rem;
 }
 
-#pitch .player0 .card:first-child, #pitch .player2 .card:first-child {
-    margin-left: 0;
+header h1 {
+    margin: 0 0 .5rem 0;
+    font-size: 1.5rem;
 }
 
-#pitch .player1 .card, #pitch .player3 .card {
-    margin-top: var(--cell-vertical-offset);
+header aside {
+    font-size: .8rem;
 }
 
-#pitch .player1 .card:first-child, #pitch .player3 .card:first-child {
-    margin-top: 0;
+footer {
+    min-height: 2rem;
 }
 
 .card {
@@ -126,7 +77,8 @@ textarea {
     max-height: var(--card-size-height);
     max-width: var(--card-size-width);
     display: inline-block;
-    border: 3px solid black;
+    border-style: solid;
+    border-color: black;
     background-color: white;
     border-radius: 1rem;
     padding: .25rem;
@@ -136,6 +88,9 @@ textarea {
     display: flex;
     flex-direction: column;
     align-items: center;
+    border-width: 3px;
+    opacity: 1;
+    /*margin-left: var(--card-left-offset);*/
 }
 
 .card.heart, .card.diamond {
@@ -163,103 +118,41 @@ textarea {
     background: rgb(2,0,36);
     background: radial-gradient(circle, rgba(2,0,36,1) 0%, rgba(9,19,121,0.6558998599439776) 35%, rgba(0,212,255,1) 100%);
 }
-
-.card-listing {
-    min-width: calc(var(--card-size-width) * 7);
+.card.movable {
+    position: absolute;
 }
 
-
-/*
-.card {
-    width: 110px;
-    height: 155px;
-    display: inline-block;
-    background-image: url('./img/fwjs-davenport-cards.webp');
-    background-repeat: no-repeat;
+.card.winner {
+    border-style: solid;
+    border-color: deepskyblue;
 }
 
-.card span {
-    display: none;
-    visibility:
+.card.outline {
+    background-color: transparent;
+    border-color: yellow;
+    border-style: dashed;
 }
 
-.card.d2 { background-position: -9px -5px; }
-.card.c2 { background-position: -9px -183px; }
-.card.h2 { background-position: -9px -361px; }
-.card.s2 { background-position: -9px -538px; }
+.card.blank {
+    background-color: transparent;
+    border-style: solid;
+    border-color: transparent;
+}
 
-.card.d3 { background-position: -138px -5px; }
-.card.c3 { background-position: -138px -183px; }
-.card.h3 { background-position: -138px -361px; }
-.card.s3 { background-position: -138px -538px; }
+.card.disabled {
+    opacity: .5;
+}
 
-.card.d4 { background-position: -272px -5px; }
-.card.c4 { background-position: -272px -183px; }
-.card.h4 { background-position: -272px -361px; }
-.card.s4 { background-position: -272px -538px; }
-
-.card.d5 { background-position: -401px -5px; }
-.card.c5 { background-position: -401px -183px; }
-.card.h5 { background-position: -401px -361px; }
-.card.s5 { background-position: -401px -538px; }
-
-.card.d6 { background-position: -534px -5px; }
-.card.c6 { background-position: -534px -183px; }
-.card.h6 { background-position: -534px -361px; }
-.card.s6 { background-position: -534px -538px; }
-
-.card.d7 { background-position: -667px -5px; }
-.card.c7 { background-position: -667px -183px; }
-.card.h7 { background-position: -667px -361px; }
-.card.s7 { background-position: -667px -538px; }
-
-.card.d8 { background-position: -801px -5px; }
-.card.c8 { background-position: -801px -183px; }
-.card.h8 { background-position: -801px -361px; }
-.card.s8 { background-position: -801px -538px; }
-
-.card.d9 { background-position: -930px -5px; }
-.card.c9 { background-position: -930px -183px; }
-.card.h9 { background-position: -930px -361px; }
-.card.s9 { background-position: -930px -538px; }
-
-.card.d10 { background-position: -1063px -5px; }
-.card.c10 { background-position: -1063px -183px; }
-.card.h10 { background-position: -1063px -361px; }
-.card.s10 { background-position: -1063px -538px; }
-
-.card.dj { background-position: -1189px -5px; }
-.card.cj { background-position: -1189px -183px; }
-.card.hj { background-position: -1189px -361px; }
-.card.sj { background-position: -1189px -538px; }
-
-.card.dq { background-position: -1318px -5px; }
-.card.cq { background-position: -1318px -183px; }
-.card.hq { background-position: -1318px -361px; }
-.card.sq { background-position: -1318px -538px; }
-
-.card.dk { background-position: -1442px -5px; }
-.card.ck { background-position: -1442px -183px; }
-.card.hk { background-position: -1442px -361px; }
-.card.sk { background-position: -1442px -538px; }
-
-.card.da { background-position: -1568px -5px; }
-.card.ca { background-position: -1568px -183px; }
-.card.ha { background-position: -1568px -361px; }
-.card.sa { background-position: -1568px -538px; }
-
-*/
-
-main nav ul {
+nav ul {
     list-style-type: none;
 }
 
-main nav ul li {
+nav ul li {
     display: inline-block;
     margin-right: 1rem;
 }
 
-main nav ul li button {
+nav ul li button {
     border-radius: 1rem;
     border: 1px solid black;
     color: white;
@@ -267,23 +160,135 @@ main nav ul li button {
     background-color: green;
 }
 
-main nav ul li button.inactive {
+nav ul li button.inactive {
     background-color: lightcoral;
     color: gray;
     cursor: not-allowed;
 }
 
-#players {
-    list-style-type: none;
-}
-
-#players li {
+.opponent {
     display: flex;
     flex-direction: row;
+    margin-bottom: .5rem;
+    min-height: calc(var(--card-size-height) + 1rem);
+}
+
+.opponent .data {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 4rem;
+}
+
+.opponent .data img.avatar {
+    border-radius: 50%;
+    background-color: white;
+    width: 3rem;
+}
+
+.opponent .card-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.opponent .card-list .card:not(:first-child) {
+    margin-left: -2rem;
+}
+
+.opponent .card-list .card.outline:not(:last-child) {
+    border-right-width: 0;
+}
+
+.battle-field {
+    display: flex;
+    flex-direction: row;
+}
+
+.battle-field .locked-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    margin-right: .5rem;
     align-items: center;
 }
 
-#players li .card-listing {
+.battle-field .locked-card.discard-deck {
+    margin-right: 1rem;
+}
+
+.battle-field .locked-card .name {
+    margin-bottom: .25rem;
+}
+
+.player-field {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.player-field .name {
+    font-size: 1.25rem;
+}
+
+.player-field .card-list {
     display: flex;
     flex-direction: row;
+    justify-content: center;
+}
+
+.card-list span.winner {
+    font-size: 2rem;
+    font-weight: bold;
+    color: red;
+}
+
+#new-game {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+#new-game button {
+    border-radius: 2rem;
+    background-color: yellow;
+    font-size: 2rem;
+    padding: .25rem .5rem;
+    font-weight: bold;
+    border: 1px solid black;
+}
+#new-game.hidden {
+    display: none;
+}
+
+#overlay {
+}
+
+#overlay .card {
+    border-color: red;
+}
+
+.hidden {
+    display: none;
+}
+
+#status {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+    font-size: 1rem;
+    color: bisque;
+    font-weight: bold;
+}
+
+#status button.new-game {
+    background-color: yellow;
+    border-radius: 1rem;
+    font-size: 1.5rem;
+    padding: .5rem 1rem;
+    border: 1px inset black;
+    color: black;
 }
