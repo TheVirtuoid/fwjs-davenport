@@ -26,7 +26,7 @@ export default class DavenportPlayer {
 		}
 		dom.setAttribute('data-id', player.id);
 		const cardDivs = document.createElement('div');
-		cardDivs.classList.add('card-list');
+		cardDivs.classList.add('card-list', 'disabled');
 
 		dom.appendChild(cardDivs);
 		this.#dom = dom;
@@ -61,10 +61,12 @@ export default class DavenportPlayer {
 	}
 
 	activateLockedCardSelection() {
+		this.#cardList.classList.remove('disabled');
 		this.#cardList.addEventListener('click', this.#processLockedCardClick.bind(this), { once: true });
 	}
 
 	#processLockedCardClick(event) {
+		this.#cardList.classList.add('disabled');
 		const cardSelected = event.target.parentElement.card;
 		if (!(cardSelected instanceof StandardCard)) {
 			this.activateLockedCardSelection();

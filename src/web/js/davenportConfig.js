@@ -1,5 +1,3 @@
-import MovingCard from "./MovingCard.js";
-
 export const playersConfig = [
 	{ id: 'You', human: true, lockedCardTimeoutSeconds: 30 },
 	{ id: 'Waldo', avatar: 'img/waldo.webp' },

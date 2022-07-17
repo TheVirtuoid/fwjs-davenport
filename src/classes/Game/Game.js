@@ -114,11 +114,11 @@ export default class Game {
 	async start () {
 		this.#roundNumber = 0;
 		while (!this.#gameOver && !this.#error?.err) {
-			await(this.playRound());
+			await(this.#playRound());
 		}
 	}
 
-	async playRound() {
+	async #playRound() {
 		this.#roundNumber++;
 		const round = new Round({
 			roundNumber: this.#roundNumber,

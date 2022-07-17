@@ -1,5 +1,3 @@
-import {StandardCard} from "@virtuoid/standard-card";
-
 export default class DavenportCard {
 	#standardCard
 	#dom;

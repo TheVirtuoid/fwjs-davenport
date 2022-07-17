@@ -3,9 +3,12 @@ import DavenportCard from "./DavenportCard.js";
 export default class MovingCard {
 	#card;
 	#timing;
+	#sound;
 
 	constructor(movingCardArguments = {}) {
 		const { timing = { duration: 250, iterations: 1 } } = movingCardArguments;
+
+		this.#sound = new Audio('audio/card-deal.wav');
 		const newCard = new DavenportCard();
 		newCard.dom.classList.add('movable', 'hidden');
 		newCard.dom.style.top = `0px`;
@@ -40,6 +43,7 @@ export default class MovingCard {
 			const dom = this.#card.dom;
 			dom.classList.remove('hidden');
 			const animate = dom.animate(animation, timing);
+			this.#sound.play();
 			animate.addEventListener('finish', () => {
 				dom.classList.add('hidden');
 				resolve();
