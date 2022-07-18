@@ -60,25 +60,25 @@ body {
 header {
     text-align: center;
     margin-bottom: 1rem;
-}
 
-header h1 {
-    margin: 0 0 .5rem 0;
-    font-size: 1.5rem;
-}
+    & h1 {
+        margin: 0 0 .5rem 0;
+        font-size: 1.5rem;
+    }
 
-header aside {
-    font-size: .8rem;
-}
+    & aside {
+        font-size: .8rem;
 
-header aside a {
-    font-style: italic;
-    font-weight: bold;
-    color: white;
-}
+        & a {
+            font-style: italic;
+            font-weight: bold;
+            color: white;
+        }
 
-header aside a:visited {
-    color: white;
+        &:visited {
+            color: white;
+        }
+    }
 }
 
 footer {
@@ -107,80 +107,57 @@ footer {
     align-items: center;
     border-width: 3px;
     opacity: 1;
-    /*margin-left: var(--card-left-offset);*/
-}
 
-.card.heart, .card.diamond {
-    color: red;
-}
+    &.heart, &.diamond {
+        color: red;
+    }
 
-.card.club, .card.spade {
-    color: black;
-}
+    &.club, &.spade {
+        color: black;
+    }
 
-.card span:first-child {
-    align-self: flex-start;
-}
+    & span:first-child {
+        align-self: flex-start;
+    }
 
-.card span:last-child {
-    align-self: flex-end;
-}
+    & span:last-child {
+        align-self: flex-end;
+    }
 
-.card span:nth-child(2) {
-    flex-grow: 2;
-    font-size: 2em;
-}
+    & span:nth-child(2) {
+        flex-grow: 2;
+        font-size: 2em;
+    }
 
-.card.back {
-    background: rgb(2,0,36);
-    background: radial-gradient(circle, rgba(2,0,36,1) 0%, rgba(9,19,121,0.6558998599439776) 35%, rgba(0,212,255,1) 100%);
-}
-.card.movable {
-    position: absolute;
-}
+    &.back {
+        background: rgb(2, 0, 36);
+        background: radial-gradient(circle, rgba(2, 0, 36, 1) 0%, rgba(9, 19, 121, 0.6558998599439776) 35%, rgba(0, 212, 255, 1) 100%);
+    }
 
-.card.winner {
-    border-style: solid;
-    border-color: deepskyblue;
-}
+    &.movable {
+        position: absolute;
+    }
 
-.card.outline {
-    background-color: transparent;
-    border-color: yellow;
-    border-style: dashed;
-}
+    &.winner {
+        border-style: solid;
+        border-color: deepskyblue;
+    }
 
-.card.blank {
-    background-color: transparent;
-    border-style: solid;
-    border-color: transparent;
-}
+    &.outline {
+        background-color: transparent;
+        border-color: yellow;
+        border-style: dashed;
+    }
 
-.card.disabled {
-    opacity: .5;
-}
+    &.blank {
+        background-color: transparent;
+        border-style: solid;
+        border-color: transparent;
+    }
 
-nav ul {
-    list-style-type: none;
-}
-
-nav ul li {
-    display: inline-block;
-    margin-right: 1rem;
-}
-
-nav ul li button {
-    border-radius: 1rem;
-    border: 1px solid black;
-    color: white;
-    cursor: pointer;
-    background-color: green;
-}
-
-nav ul li button.inactive {
-    background-color: lightcoral;
-    color: gray;
-    cursor: not-allowed;
+    &.disabled {
+        opacity: .5;
+    }
 }
 
 .opponent {
@@ -188,71 +165,38 @@ nav ul li button.inactive {
     flex-direction: row;
     margin-bottom: .5rem;
     min-height: calc(var(--card-size-height) + 1rem);
-}
 
-.opponent .data {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 4rem;
-}
+    & .data {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 4rem;
 
-.opponent .data img.avatar {
-    border-radius: 50%;
-    background-color: white;
-    width: 3rem;
-}
+        & img.avatar {
+            border-radius: 50%;
+            background-color: white;
+            width: 3rem;
+        }
+    }
 
-.opponent .card-list {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-}
+    & .card-list {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
 
-.opponent .card-list .card:not(:first-child) {
-    margin-left: -2rem;
-}
+        & .card:not(:first-child) {
+            margin-left: -2rem;
+        }
 
-.opponent .card-list .card.outline:not(:last-child) {
-    border-right-width: 0;
-}
+        & .card.outline:not(:last-child) {
+            border-right-width: 0;
+        }
+    }
 
-.opponent .card-list .winner {
-    align-self: center;
-}
-
-.player-field .card-list.disabled {
-    opacity: .5;
-}
-
-.player-field .card-list .card {
-    cursor: pointer;
-}
-
-.player-field .card-list.disabled .card {
-    cursor: default;
-}
-
-.battle-field {
-    display: flex;
-    flex-direction: row;
-}
-
-.battle-field .locked-card {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    margin-right: .5rem;
-    align-items: center;
-}
-
-.battle-field .locked-card.discard-deck {
-    margin-right: 1rem;
-}
-
-.battle-field .locked-card .name {
-    margin-bottom: .25rem;
+    & .winner {
+        align-self: center;
+    }
 }
 
 .player-field {
@@ -260,22 +204,57 @@ nav ul li button.inactive {
     flex-direction: column;
     align-items: center;
     margin-top: 1rem;
+
+    & .name {
+        font-size: 1.25rem;
+    }
+
+    & .card-list {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+
+        &.disabled {
+            opacity: .5;
+
+            & .card {
+                cursor: default;
+            }
+        }
+
+        & .card {
+            cursor: pointer;
+        }
+    }
 }
 
-.player-field .name {
-    font-size: 1.25rem;
-}
-
-.player-field .card-list {
+.battle-field {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+
+    & .locked-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        margin-right: .5rem;
+        align-items: center;
+
+        &.discard-deck {
+            margin-right: 1rem;
+        }
+
+        * .name {
+            margin-bottom: .25rem;
+        }
+    }
 }
 
-.card-list span.winner {
-    font-size: 2rem;
-    font-weight: bold;
-    color: red;
+.card-list {
+    & span.winner {
+        font-size: 2rem;
+        font-weight: bold;
+        color: red;
+    }
 }
 
 #new-game {
@@ -283,24 +262,25 @@ nav ul li button.inactive {
     flex-direction: column;
     justify-content: center;
     height: 100%;
-}
-#new-game button {
-    border-radius: 2rem;
-    background-color: yellow;
-    font-size: 2rem;
-    padding: .25rem .5rem;
-    font-weight: bold;
-    border: 1px solid black;
-}
-#new-game.hidden {
-    display: none;
+
+    & button {
+        border-radius: 2rem;
+        background-color: yellow;
+        font-size: 2rem;
+        padding: .25rem .5rem;
+        font-weight: bold;
+        border: 1px solid black;
+    }
+
+    &.hidden {
+        display: none;
+    }
 }
 
 #overlay {
-}
-
-#overlay .card {
-    border-color: red;
+    & .card {
+        border-color: red;
+    }
 }
 
 .hidden {

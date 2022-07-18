@@ -29,6 +29,7 @@
   "devDependencies": {
     "@cypress/webpack-preprocessor": "^5.11.1",
     "cypress": "^10.3.0",
+    "postcss-nesting": "^10.1.10",
     "vite": "^2.9.9"
   },
   "dependencies": {
